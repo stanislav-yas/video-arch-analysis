@@ -1,0 +1,15 @@
+{
+  "name": "video-arch-analysis",
+  "version": "1.0.0",
+  "description": "Анализ видеоархива по индексным файлам",
+  "main": "main.js",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "keywords": [],
+  "author": "Stanislav <79139705320@ya.ru>",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
