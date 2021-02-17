@@ -1,6 +1,6 @@
 const analize = require('./analize-share-folders');
 
-const curTime = new Date('2021-02-16T14:50:00'); // new Date(); //   
+const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
 
 // конец предыдущего часа
 const fromTime = new Date(
@@ -22,9 +22,9 @@ const options = {
 // let endTime = new Date('2021-02-16T09:59:59');
 
 analize(options)
-  .then((resultTable) => {
-    console.log(`Parsing is done => ${resultTable.totalCheckedFragmentsCount} fragments checked`);
+  .then((resultTables) => {
+    console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
   })
   .catch((err) => {
-    console.error(`Parsing was failed => ${err}`);
+    console.error(`Analize was failed => ${err}`);
   });
