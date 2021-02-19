@@ -4,9 +4,18 @@
 // db.stop();
 
 const va = require('./video-archive');
-const res = va.getSlaves();
-console.log(`Result returns ${res.length}`);
+
+va.getSlaves()
+  .then((result) => {
+    console.log(`Result returns ${result.length}`);
+  })
+  .catch((err) => {
+    console.error(`getSlaves() failed => ${err}`);
+  })
+  .finally (() => va.closeConnection());
+
 return;
+
 const analize = require('./analize-share-folders');
 
 const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
