@@ -1,3 +1,12 @@
+// const db = require('./db');
+// db.run();
+// db.exec();
+// db.stop();
+
+const va = require('./video-archive');
+const res = va.getSlaves();
+console.log(`Result returns ${res.length}`);
+return;
 const analize = require('./analize-share-folders');
 
 const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
