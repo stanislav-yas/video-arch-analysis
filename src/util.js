@@ -21,6 +21,21 @@ const dateStrings = (date) => {
   };
 };
 
+const objectToFile = (obj, filePath, isLogged = false) => {
+  require('fs').writeFile(filePath, JSON.stringify(obj), (err) => {
+    if (err) {
+      if (isLogged) {
+        console.error(`saving object failed => ${err}`);
+      }
+    }
+    if (isLogged) {
+      console.log(`The file ${filePath} has been saved!`);
+    }
+  }
+);
+}
+
 module.exports = {
-  dateStrings
+  dateStrings,
+  objectToFile
 }
