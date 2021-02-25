@@ -1,3 +1,7 @@
+const {colours: cc} = require('./util');
+
+console.log(cc.fg.green, 'This is green message', cc.bg.green, 'This is magenta');
+
 const va = require('./video-archive');
 
 const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
