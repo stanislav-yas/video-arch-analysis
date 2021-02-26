@@ -3,7 +3,23 @@ const getTimeMapIndex = (fromTimeInSec, timeInSec, intervalInMinutes) => {
 }
 
 class ResultTable {
-  constructor(camsIDs, options) {
+  // constructor(camsIDs, options) {
+  //   this.options = options;
+  //   const {deepInHours, intervalInMinutes, fromTime} = this.options;
+  //   this.intervalsCount = deepInHours * 60 / intervalInMinutes;
+  //   this.fromTimeInSec = fromTime.getTime()/1000;
+  //   this.totalFragmentsCount = 0;
+  //   this.totalCheckedFragmentsCount = 0;
+  //   this.timeMap = {};
+  //   camsIDs.forEach(element => {
+  //     this.timeMap[element] = 
+  //     {
+  //       intervalsFlags: Array(this.intervalsCount),
+  //       checkedFragmentsCount: 0
+  //     }
+  //   });
+  constructor(slave, options) {
+    this.slave = slave;
     this.options = options;
     const {deepInHours, intervalInMinutes, fromTime} = this.options;
     this.intervalsCount = deepInHours * 60 / intervalInMinutes;
@@ -11,6 +27,7 @@ class ResultTable {
     this.totalFragmentsCount = 0;
     this.totalCheckedFragmentsCount = 0;
     this.timeMap = {};
+    const camsIDs = Object.keys(slave.cams);
     camsIDs.forEach(element => {
       this.timeMap[element] = 
       {

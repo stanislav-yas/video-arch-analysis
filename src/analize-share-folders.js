@@ -7,9 +7,9 @@ const { dateStrings } = require('./util');
 
 const indexFolder = 'VIDEO\\INDEX';
 
-const analizeIndexFolder = async (indexFolderPath, camsIDs, options) => {
-
-  const resultTable = new ResultTable(camsIDs, options);
+const analizeSlave = async (slave, options) => {
+  const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, indexFolder);
+  const resultTable = new ResultTable(slave, options);
   const {fromTime, deepInHours} = options;
 
   for (let index = 0; index < deepInHours; index++) {
@@ -33,19 +33,13 @@ const analizeIndexFolder = async (indexFolderPath, camsIDs, options) => {
   return resultTable;
 }
 
-const analizeSlave = async (slave, options) => {
-  // TODO
-}
-
 const analize = async (slaves, options) => {
 
   const resultTables = [];
 
   for (const slave of slaves) {
-    const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, indexFolder);
-    const resultTable = await analizeIndexFolder(indexFolderPath, Object.keys(slave.cams), options);
+    resultTable = await analizeSlave(slave, options);
     console.log(`Analize of ${slave.id} is done => ${resultTable.totalCheckedFragmentsCount} fragments checked`);
-    resultTable.slave = slave.id;
     resultTables.push(resultTable);
   }
   

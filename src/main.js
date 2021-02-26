@@ -27,7 +27,7 @@ const options = {
 
 va.analize(options)
   .then((resultTables) => {
-    require('./util').objectToFile(resultTables, 'result.txt', true);
+    require('./util').objectToFile(resultTables, './misc/result.json', true);
     console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
   })
   .catch((err) => {
