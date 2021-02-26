@@ -21,6 +21,12 @@ const dateStrings = (date) => {
   };
 };
 
+/**
+ * Saving any Object to file
+ * @param {*} obj Object to be saved
+ * @param {string | number | Buffer | URL} filePath A path to a file
+ * @param {boolean} [isLogged = false] logging flag
+ */
 const objectToFile = (obj, filePath, isLogged = false) => {
   require('fs').writeFile(filePath, JSON.stringify(obj), (err) => {
     if (err) {
@@ -32,6 +38,17 @@ const objectToFile = (obj, filePath, isLogged = false) => {
       console.log(`The file ${filePath} has been saved!`);
     }
   });
+}
+
+/**
+ * Creating JSON Object from file
+ * @param {string | number | Buffer | URL} jsonFilePath
+ * @param {string} [encoding = 'utf8']
+ * @returns {object} JSON Object
+ */
+const objectFromJsonFile = (jsonFilePath, encoding = 'utf8') => {
+  const loadedString = require('fs').readFileSync(jsonFilePath, encoding);
+  return JSON.parse(loadedString);
 }
 
 const colours = {
@@ -70,5 +87,6 @@ const colours = {
 module.exports = {
   dateStrings,
   objectToFile,
+  objectFromJsonFile,
   colours
 }

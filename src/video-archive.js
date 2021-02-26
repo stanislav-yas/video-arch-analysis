@@ -61,8 +61,9 @@ const closeConnection = () => {
 
 const analize = async (options) => {
 
-  const slaves = await getSlaves();
+  let slaves = await getSlaves();
   //console.log(`Slaves count = ${slaves.length}`);
+  slaves = [slaves[0]];
 
   for (const slave of slaves) {
     const cams = await getCams(slave.id); // cams = [{'id1', 'name1'}, {'id2', 'name2'}, ...]

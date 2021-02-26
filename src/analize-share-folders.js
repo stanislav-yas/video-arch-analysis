@@ -33,6 +33,10 @@ const analizeIndexFolder = async (indexFolderPath, camsIDs, options) => {
   return resultTable;
 }
 
+const analizeSlave = async (slave, options) => {
+  // TODO
+}
+
 const analize = async (slaves, options) => {
 
   const resultTables = [];
