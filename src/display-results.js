@@ -43,13 +43,13 @@ function printCamInfo(timeMap, camID, camName, ident) {
   console.log(`${fgColor}${camTitle} ${fragmentsInfo} ( ${cnt} фр.)`);
 }
 
-function displayResultTable(resultTable, ident) {
+function displayResultTable(resultTable, ident = 40) {
   const { slave, intervalsCount, options, fromTimeInSec, timeMap } = resultTable;
   const { deepInHours, intervalInMinutes } = options;
   const { cams } = slave;
   const camsIDs = Object.keys(cams);
 
-  console.clear();
+  //console.clear();
   console.log(`\nРезультат анализа индексов видеоархива на ${cc.bright}${slave.id}${cc.reset} за ${deepInHours} часов`);
   const sinceTime = new Date((fromTimeInSec + 1) * 1000 - (deepInHours * 60 * 60 * 1000));
   console.log(`с ${sinceTime.toLocaleString()} (интервал - ${intervalInMinutes} минут)\n`);
@@ -68,9 +68,9 @@ function displayResults(resultTables) {
   }
 }
 
-(function test(){
-  const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
-  displayResults(resultTables);
-})();
+// (function test(){
+//   const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
+//   displayResults(resultTables);
+// })();
 
 module.exports = {displayResults, displayResultTable};

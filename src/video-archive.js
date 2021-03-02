@@ -62,7 +62,7 @@ const closeConnection = () => {
 const analize = async (options) => {
 
   let slaves = await getSlaves();
-  slaves = [slaves[0]]; // for debug use!
+  //slaves = [slaves[0]]; // for debug use!
   //console.log(`Slaves count = ${slaves.length}`);
 
   for (const slave of slaves) {
