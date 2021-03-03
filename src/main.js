@@ -1,8 +1,13 @@
-const {colours: cc} = require('./util');
-
-console.log(cc.fg.green, 'This is green message', cc.bg.green, 'This is magenta');
-
+const {colours: cc, objectFromJsonFile} = require('./util');
+const path = require('path');
 const va = require('./video-archive');
+
+const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
+
+const app = {
+  title: package.description,
+  version: package.version
+}
 
 const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
 
@@ -16,16 +21,14 @@ const fromTime = new Date(
   59
 );
 
-const options = {
+app.options = {
   fromTime,
-  deepInHours: 12,
-  intervalInMinutes: 15
+  deepInHours: process.argv[2] || 12,
+  intervalInMinutes: process.argv[3] || 15
 }
 
-// let beginTime = new Date('2021-02-16T09:45:59');
-// let endTime = new Date('2021-02-16T09:59:59');
-
-va.analize(options)
+function run () {
+  va.analize(app.options)
   .then((resultTables) => {
     require('./util').objectToFile(resultTables, './misc/result.json', true);
     console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
@@ -33,3 +36,6 @@ va.analize(options)
   .catch((err) => {
     console.error(`Analize was failed => ${err}`);
   });
+};
+
+// run();
