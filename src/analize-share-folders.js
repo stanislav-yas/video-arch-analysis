@@ -18,10 +18,9 @@ const analizeSlave = async (slave, options) => {
     const indexFileBaseName = `${ds.DD}${ds.MM}${ds.YY}${ds.hh}.idx`;
     const indexFilePath = path.join(indexFolderPath, indexFileBaseName);
     if (fs.existsSync(indexFilePath)) {
-      console.log(`${indexFilePath} exists`);
       try {
         const {cnt} = await parseIndexFile(indexFilePath, resultTable);
-        console.log(`${cnt} fragment(s) parsed`);
+        console.log(`${indexFilePath} => ${cnt} fragment(s) parsed`);
         // console.log(`${rt.totalCheckedFragmentsCount} fragments checked`);
       } catch (err) {
         console.error(`Error was occurred in parseIndexFile function => ${err}`);

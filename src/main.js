@@ -6,7 +6,8 @@ const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
 
 const app = {
   title: package.description,
-  version: package.version
+  version: package.version,
+  fullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v. ${package.version})${cc.reset}`
 }
 
 const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
@@ -21,21 +22,27 @@ const fromTime = new Date(
   59
 );
 
-app.options = {
+app.params = {
   fromTime,
   deepInHours: process.argv[2] || 12,
   intervalInMinutes: process.argv[3] || 15
 }
 
 function run () {
-  va.analize(app.options)
+  console.clear();
+  console.log(app.fullTitle);
+
+  va.analize(app.params)
   .then((resultTables) => {
-    require('./util').objectToFile(resultTables, './misc/result.json', true);
+    // objectToFile(resultTables, './misc/result.json', true);
     console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
+    const Interface = require('./interface');
+    new Interface(resultTables).run();
   })
   .catch((err) => {
     console.error(`Analize was failed => ${err}`);
   });
 };
 
-// run();
+module.exports = { app };
+run();

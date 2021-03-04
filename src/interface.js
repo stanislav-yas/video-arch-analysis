@@ -1,37 +1,12 @@
+const {app} = require('./main');
 const {colours: cc} = require('./util');
 const { displayResultTable } = require('./display-results');
 const readline = require('readline');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+const appFullTitle = app.fullTitle;
 
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
-
-// (function test(){
-//   const checkPressedKey = (str, key) => {
-//     if (key.ctrl && key.name === 'c') {
-//       process.exit();
-//     } else {
-//       console.log(`You pressed the "${str}" key`);
-//       console.log();
-//       console.log(key);
-//       console.log();
-//     }
-//   };
-
-//   process.stdin.on('keypress', checkPressedKey);
-//   console.log('Press any key...');
-// })();
-
-
-// key.name: 'down', str: "undefined" - key Arrow Down
-// key.name: 'up', str: "undefined" - key Arrow Up
-// key.name: 'space', str: " " - key Space
-// key.name: 'escape', str: "undefined" - key Escape
-// key.name: 'return', str: "\r" - key Enter (Return)
 
 class Interface {
   constructor(resultTables) {
@@ -43,6 +18,8 @@ class Interface {
     switch (key.name) {
 
       case 'down':
+      case 'space':
+      case 'return': 
         this.itemIndex++;
         if (this.itemIndex === this.resultTables.length) {
           this.itemIndex = 0;
@@ -59,21 +36,15 @@ class Interface {
         break;
 
       case 'escape':
-        rl.close();
         process.exit(0);
-
-      case 'space':
-      case 'return':
-
     }
   }
 
   draw() {
     console.clear();
+    console.log(app.fullTitle);
     this.showMenu();
-    //console.log(rl.getCursorPos());
     this.showResult();
-    //console.log(rl.getCursorPos());
   }
 
   showResult() {
@@ -82,10 +53,11 @@ class Interface {
 
   showMenu() {
     let menuStr = cc.reset;
-    menuStr += `\nВыбирите доступный сервер для просмотра результата анализа видеофайлов (↑ ↓ Space/Enter):\n`;
+    menuStr += `\n Выбирите доступный компьютер с видеоархивом (${cc.fg.yellow}↑ ↓ Space Enter , Esc - выход${cc.reset}):\n\n`;
 
     for (let index = 0; index < this.resultTables.length; index++) {
       const resultTable = this.resultTables[index];
+      menuStr += ' ';
 
       if (index === this.itemIndex) {
         menuStr += cc.reverse;
@@ -101,8 +73,10 @@ class Interface {
   }
 }
 
-(function run() {
-  const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
-  const interface = new Interface(resultTables);
-  interface.run();
-})();
+module.exports = Interface;
+
+// (function run() {
+//   const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
+//   const interface = new Interface(resultTables);
+//   interface.run();
+// })();
