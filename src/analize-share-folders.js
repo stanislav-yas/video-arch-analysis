@@ -5,10 +5,14 @@ const { parseIndexFile } = require('./index-file');
 const { ResultTable } = require('./result-table');
 const { dateStrings } = require('./util');
 
-const indexFolder = 'VIDEO\\INDEX';
+const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 
 const analizeSlave = async (slave, options) => {
-  const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, indexFolder);
+
+  const indexFolderPath = process.env.MOCK ?
+    path.join(slavesMockDirPath, slave.id, 'INDEX') :
+    path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
+
   const resultTable = new ResultTable(slave, options);
   const {fromTime, deepInHours} = options;
 

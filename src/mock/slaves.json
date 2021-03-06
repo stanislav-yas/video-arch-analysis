@@ -1,0 +1,52 @@
+[
+  {
+    "id": "SV1",
+    "name": "Сервер SV1",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV10",
+    "name": "Сервер SV10",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV11",
+    "name": "Сервер SV11",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV3",
+    "name": "Сервер SV3",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV4",
+    "name": "Сервер SV4",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV5",
+    "name": "Сервер SV5",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV6",
+    "name": "Сервер SV6",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV7",
+    "name": "Сервер SV7",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV8",
+    "name": "Сервер SV8",
+    "vdrive": "D"
+  },
+  {
+    "id": "SV9",
+    "name": "Сервер SV9",
+    "vdrive": "D"
+  }
+]

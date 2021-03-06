@@ -2,6 +2,8 @@ const {colours: cc, objectFromJsonFile} = require('./util');
 const path = require('path');
 const va = require('./video-archive');
 
+//process.env.MOCK = true; // true if use mock data
+
 const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
 
 const app = {
@@ -10,7 +12,9 @@ const app = {
   fullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v. ${package.version})${cc.reset}`
 }
 
-const curTime = new Date(); // new Date('2021-02-16T14:50:00'); // 
+const curTime = process.env.MOCK ?
+  new Date('2021-03-06T12:10:00') :
+  new Date();
 
 // конец предыдущего часа
 const fromTime = new Date(
