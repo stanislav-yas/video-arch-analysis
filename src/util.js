@@ -84,9 +84,30 @@ const colours = {
   }
 };
 
+/**
+ * Function to view the info about key pressed (Ctr+c to exit)
+ */
+function checkKeyPress() {
+  const readline = require('readline');
+  readline.emitKeypressEvents(process.stdin);
+  process.stdin.setRawMode(true);
+  process.stdin.on('keypress', (str, key) => {
+    if (key.ctrl && key.name === 'c') {
+      process.exit(0);
+    } else {
+      console.log(`You pressed the "${str}" key`);
+      console.log();
+      console.log(key);
+      console.log();
+    }
+  });
+  console.log('Press any key to view the key info (Ctr+c to exit)');
+}
+
 module.exports = {
   dateStrings,
   objectToFile,
   objectFromJsonFile,
-  colours
+  colours,
+  checkKeyPress
 }
