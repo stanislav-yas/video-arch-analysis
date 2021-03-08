@@ -1,4 +1,4 @@
-const {app} = require('./main');
+const app = require('./main');
 const {colours: cc} = require('./util');
 const { displayResultTable } = require('./display-results');
 const readline = require('readline');
