@@ -1,10 +1,8 @@
 const {colours: cc, objectFromJsonFile} = require('./util');
 const path = require('path');
-const va = require('./video-archive');
-
-//process.env.MOCK = true; // true if use mock data
-
 const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
+
+process.env.MOCK = true; // true if use mock data
 
 const app = {
   title: package.description,
@@ -36,6 +34,7 @@ function run () {
   console.clear();
   console.log(app.fullTitle);
 
+  const va = require('./video-archive');
   va.analize(app.params)
   .then((resultTables) => {
     // objectToFile(resultTables, './misc/result.json', true);
@@ -48,5 +47,5 @@ function run () {
   });
 };
 
-module.exports = { app };
+module.exports = app;
 run();

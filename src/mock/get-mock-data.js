@@ -3,7 +3,7 @@ const path = require('path');
 
 const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 
-async function getSlavesMock(){
+async function getSlaves(){
   const slaves = [];
   const dir = await fs.promises.opendir(slavesMockDirPath);
   for await (const dirent of dir) {
@@ -17,15 +17,15 @@ async function getSlavesMock(){
   return slaves;
 }
 
-function getCamsMock(slaveID) {
+function getCams(slaveID) {
   const camsJSPath = path.join(slavesMockDirPath, slaveID, 'cams.js');
   const cams = require(camsJSPath);
   return cams;
 }
 
 module.exports = {
-  getSlavesMock,
-  getCamsMock
+  getSlaves,
+  getCams
 }
 
 // getSlaves().then((slaves) => console.log(slaves));

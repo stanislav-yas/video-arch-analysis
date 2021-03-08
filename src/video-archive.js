@@ -1,8 +1,5 @@
 const db = require('./db');
 const analizeShareFolders = require('./analize-share-folders');
-const {getSlavesMock, getCamsMock} = require('./mock/get-mock-data');
-
-// process.env.MOCK = true;
 
 const connectionParams = {
   dbDriver: 'DRIVER={ODBC Driver 11 for SQL Server}',
@@ -47,24 +44,14 @@ async function checkConnection() {
 }
 
 async function getSlaves() {
-  let slaves = null;
-  if(process.env.MOCK) {
-    slaves = await getSlavesMock();
-  } else {
-    await checkConnection();
-    slaves = await db.connQueryAsync(connection, querySlaves);
-  }
+  await checkConnection();
+  const slaves = await db.connQueryAsync(connection, querySlaves);
   return slaves;
 }
 
 async function getCams(slaveID) {
-  let cams = null;
-  if(process.env.MOCK) {
-    cams = getCamsMock(slaveID);
-  } else {
-    await checkConnection();
-    cams = await db.connQueryAsync(connection, queryCams(slaveID));
-  }
+  await checkConnection();
+  const cams = await db.connQueryAsync(connection, queryCams(slaveID));
   return cams;
 }
 
@@ -92,4 +79,15 @@ async function analize(options) {
   return analizeShareFolders(slaves, options);
 }
 
-module.exports = { analize, getSlaves, getCams, closeConnection };
+if(process.env.MOCK) {
+  ({ getSlaves, getCams } = require('./mock/get-mock-data'));
+}
+
+// const { getSlaves: getSlavesMock, getCams: getCamsMock } = require('./mock/get-mock-data');
+
+module.exports = {
+  getSlaves, //: MOCK ? getSlavesMock : getSlaves,
+  getCams, //: MOCK ? getCamsMock : getCams,
+  analize,
+  closeConnection
+};
