@@ -1,4 +1,4 @@
-const sql = require('msnodesqlv8');
+const sql = require('msnodesqlv8'); // https://github.com/TimelordUK/node-sqlserver-v8/wiki
 
 const connectionParamsDefault = {
   dbDriver: 'DRIVER={ODBC Driver 11 for SQL Server}',
