@@ -7,7 +7,7 @@ const path = require('path');
 const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
 const config = require('./config');
 
-// process.env.MOCK = true; // true if use mock data
+process.env.MOCK = true; // true if use mock data
 
 const curTime = process.env.MOCK ?
   new Date('2021-03-06T12:10:00') :
@@ -31,8 +31,9 @@ const app = {
 }
 
 function run () {
-  const va = require('./video-archive');
-  va.analize(app.config)
+  const VideoArchive = require('./video-archive');
+  const va = new VideoArchive(app.config);
+  va.analize()
   .then((resultTables) => {
     // objectToFile(resultTables, './misc/result.json', true);
     console.clear();
