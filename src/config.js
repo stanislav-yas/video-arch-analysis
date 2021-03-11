@@ -5,7 +5,7 @@ const config = {
     dbDriver: 'DRIVER={ODBC Driver 11 for SQL Server}',
     dbServer: '(local)\\SQLEXPRESS',
     database: 'intellect',
-    uid: 's',
+    uid: 'sa',
     pwd: 'ITV'
   }
 };
