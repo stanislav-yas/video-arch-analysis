@@ -2,8 +2,9 @@ const path = require('path');
 const fs = require('fs');
 
 const { parseIndexFile } = require('./index-file');
+const continuousDepth = require('./continuous-depth');
 const { ResultTable } = require('./result-table');
-const { dateStrings } = require('./util');
+const { dateStrings, timeInts: ti } = require('./util');
 
 const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 
@@ -16,8 +17,10 @@ const analizeSlave = async (slave, options) => {
   const resultTable = new ResultTable(slave, options);
   const {fromTime, deepInHours} = options;
 
+  const depth = continuousDepth(fromTime, indexFolderPath);
+
   for (let index = 0; index < deepInHours; index++) {
-    const archDate = new Date(fromTime.getTime() - (index * 60 * 60 * 1000));
+    const archDate = new Date(fromTime.getTime() - (ti.hour * index));
     const ds = dateStrings(archDate);
     const indexFileBaseName = `${ds.DD}${ds.MM}${ds.YY}${ds.hh}.idx`;
     const indexFilePath = path.join(indexFolderPath, indexFileBaseName);

@@ -22,6 +22,16 @@ const dateStrings = (date) => {
 };
 
 /**
+ * Time intervals in milliseconds
+ */
+const timeInts = {
+  sec: 1000,
+  minute: 1000 * 60,
+  hour: 1000 * 60 * 60,
+  day: 1000 * 60 * 60 * 24,
+}
+
+/**
  * Saving any Object to file
  * @param {*} obj Object to be saved
  * @param {string | number | Buffer | URL} filePath A path to a file
@@ -106,6 +116,7 @@ function checkKeyPress() {
 
 module.exports = {
   dateStrings,
+  timeInts,
   objectToFile,
   objectFromJsonFile,
   colours,
