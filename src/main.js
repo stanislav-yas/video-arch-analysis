@@ -2,7 +2,7 @@ process.on('uncaughtException', (err) => {
   console.error(`Произошла ошибка во время выполнения программы => ${err}`);
 })
 
-const {colours: cc, objectFromJsonFile} = require('./util');
+const {colours: cc, objectFromJsonFile, objectToFile} = require('./util');
 const path = require('path');
 const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
 const config = require('./config');

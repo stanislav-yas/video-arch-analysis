@@ -46,14 +46,14 @@ function printCamInfo(timeMap, camID, camName, ident) {
 }
 
 function displayResultTable(resultTable, ident = 40) {
-  const { slave, intervalsCount, options, fromTimeInSec, timeMap } = resultTable;
-  const { deepInHours, intervalInMinutes } = options;
+  const { slave, intervalsCount, config, fromTimeInSec, timeMap } = resultTable;
+  const { deepInHours, intervalInMinutes } = config;
   const { cams } = slave;
   const camsIDs = Object.keys(cams);
 
   //console.clear();
   const fgColor = cc.reset + cc.fg.green;
-  console.log(`${fgColor} Результат анализа индексов видеоархива на ${cc.bright}${slave.id}${fgColor} за ${deepInHours} часов${cc.reset}`);
+  console.log(`\n${fgColor} Результат анализа индексов видеоархива на ${cc.bright}${slave.id}${fgColor} за ${deepInHours} часов${cc.reset}`);
   const sinceTime = new Date((fromTimeInSec + 1) * 1000 - (deepInHours * 60 * 60 * 1000));
   console.log(`${fgColor} с ${sinceTime.toLocaleString()} (интервал - ${intervalInMinutes} минут)\n${cc.reset}`);
   printHoursHeader(camsIDs.length, fromTimeInSec, deepInHours, intervalInMinutes, intervalsCount, ident);
