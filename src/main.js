@@ -27,7 +27,7 @@ const app = {
   config,
   title: package.description,
   version: package.version,
-  fullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v ${package.version})${cc.reset}`
+  fullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v${package.version})${cc.reset}`
 }
 
 function run () {

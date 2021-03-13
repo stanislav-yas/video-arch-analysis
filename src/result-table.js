@@ -3,29 +3,15 @@ const getTimeMapIndex = (fromTimeInSec, timeInSec, intervalInMinutes) => {
 }
 
 class ResultTable {
-  // constructor(camsIDs, options) {
-  //   this.options = options;
-  //   const {deepInHours, intervalInMinutes, fromTime} = this.options;
-  //   this.intervalsCount = deepInHours * 60 / intervalInMinutes;
-  //   this.fromTimeInSec = fromTime.getTime()/1000;
-  //   this.totalFragmentsCount = 0;
-  //   this.totalCheckedFragmentsCount = 0;
-  //   this.timeMap = {};
-  //   camsIDs.forEach(element => {
-  //     this.timeMap[element] = 
-  //     {
-  //       intervalsFlags: Array(this.intervalsCount),
-  //       checkedFragmentsCount: 0
-  //     }
-  //   });
-  constructor(slave, options) {
+  constructor(slave, config) {
     this.slave = slave;
-    this.options = options;
-    const {deepInHours, intervalInMinutes, fromTime} = this.options;
+    this.config = config;
+    const {deepInHours, intervalInMinutes, fromTime} = this.config;
     this.intervalsCount = deepInHours * 60 / intervalInMinutes;
     this.fromTimeInSec = fromTime.getTime()/1000;
     this.totalFragmentsCount = 0;
     this.totalCheckedFragmentsCount = 0;
+    this.continuousDepth = 0;
     this.timeMap = {};
     const camsIDs = Object.keys(slave.cams);
     camsIDs.forEach(element => {
@@ -38,7 +24,7 @@ class ResultTable {
   }
 
   ckeckFragment (beginTimeInSec, endTimeInSec, camID) {
-    const {intervalInMinutes} = this.options;
+    const {intervalInMinutes} = this.config;
     // const beginTime = new Date(beginTimeInSec * 1000);
     // const endTime = new Date(endTimeInSec * 1000);
     // console.log (`${fromTime} : ${fromTimeInSec}`);
