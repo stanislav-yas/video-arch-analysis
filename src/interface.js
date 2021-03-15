@@ -1,7 +1,7 @@
 const {colours: cc} = require('./util');
 const { displayResultTable } = require('./display-results');
+const { stdout } = process;
 const readline = require('readline');
-const config = require('./config');
 
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
@@ -40,7 +40,7 @@ class Interface {
 
   draw() {
     console.clear();
-    console.log(this.config.appFullTitle);
+    stdout.write(this.config.appFullTitle + '\n');
     this.showMenu();
     this.showResult();
   }
@@ -50,7 +50,7 @@ class Interface {
   }
 
   showMenu() {
-    console.log(`\n${cc.reset} Выбирите доступный компьютер с видеоархивом (${cc.fg.yellow}↑ ↓ Space Enter , Esc - выход${cc.reset}):\n\n компьютер  [непрер. глубина в/архива в днях]\n`);
+    stdout.write(`\n${cc.reset} Выбирите доступный компьютер с видеоархивом (${cc.fg.yellow}↑ ↓ Space Enter , Esc - выход${cc.reset}):\n\n компьютер  [непрер. глубина в/архива в днях]\n\n`);
 
     let maxSlaveIdLength = 0;
     this.resultTables.forEach(rt => {
@@ -71,7 +71,7 @@ class Interface {
         fgColor += cc.reverse;
         // menuStr = cc.reverse + menuStr;
       }
-      console.log(` ${fgColor}${menuStr}[${continuousDepth}]${cc.reset}`);
+      stdout.write(` ${fgColor}${menuStr}[${continuousDepth}]${cc.reset}\n`);
     }
   }
 
@@ -83,9 +83,9 @@ class Interface {
 
 module.exports = Interface;
 
-(function run() {
-  const config = require('./config');
-  const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
-  const interface = new Interface(config, resultTables);
-  interface.run();
-})();
+// (function run() {
+//   const config = require('./config');
+//   const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
+//   const interface = new Interface(config, resultTables);
+//   interface.run();
+// })();

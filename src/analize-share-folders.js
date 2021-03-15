@@ -67,8 +67,9 @@ async function analize(slaves, config) {
   const resultTables = [];
 
   for (const slave of slaves) {
+    process.stdout.write(`анализ в/врхива на ${slave.id} ...`);
     resultTable = await analizeSlave(slave, config);
-    console.log(`Analize of ${slave.id} is done => ${resultTable.totalCheckedFragmentsCount} fragments checked / ${resultTable.continuousDepth} day(s) continuous depth`);
+    console.log(`выполнен => ${resultTable.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${resultTable.continuousDepth} дня(дней)\n`);
     resultTables.push(resultTable);
   }
 

@@ -1,4 +1,5 @@
 const {colours: cc} = require('./util');
+const { stdout } = process;
 
 function printHoursHeader(camsCount, fromTimeInSec, deepInHours, intervalInMinutes, intervalsCount, ident) {
   const hourLabelLength = Math.floor(60 / intervalInMinutes);
@@ -9,9 +10,10 @@ function printHoursHeader(camsCount, fromTimeInSec, deepInHours, intervalInMinut
     header += curHourStr.padEnd(hourLabelLength);
   }
   header = header.padStart(ident + intervalsCount);
-  console.log(''.padStart(header.length, '-'));
-  console.log(`${cc.reset}${cc.bright}${header}${cc.reset}`);
-  console.log(''.padStart(header.length, '-'));
+  const headerLine = ''.padStart(header.length, '-')  + '\n';
+  stdout.write(headerLine);
+  stdout.write(`${cc.reset}${cc.bright}${header}${cc.reset}\n`);
+  stdout.write(headerLine);
 }
 
 /**
@@ -42,7 +44,7 @@ function printCamInfo(timeMap, camID, camName, ident) {
   } else if (cnt <= 2) {
     fgColor = cc.fg.yellow + cc.bright;
   }
-  console.log(`${fgColor}${camTitle} ${fragmentsInfo} ( ${cnt} фр.)`);
+  stdout.write(`${fgColor}${camTitle} ${fragmentsInfo} ( ${cnt} фр.)\n`);
 }
 
 function displayResultTable(resultTable, ident = 40) {
@@ -51,11 +53,10 @@ function displayResultTable(resultTable, ident = 40) {
   const { cams } = slave;
   const camsIDs = Object.keys(cams);
 
-  //console.clear();
   const fgColor = cc.reset + cc.fg.green;
-  console.log(`\n${fgColor} Результат анализа индексов видеоархива на ${cc.bright}${slave.id}${fgColor} за ${deepInHours} часов${cc.reset}`);
+  process.stdout.write(`\n${fgColor} Результат анализа индексов видеоархива на ${cc.bright}${slave.id}${fgColor} за ${deepInHours} часов${cc.reset}\n`);
   const sinceTime = new Date((fromTimeInSec + 1) * 1000 - (deepInHours * 60 * 60 * 1000));
-  console.log(`${fgColor} с ${sinceTime.toLocaleString()} (интервал - ${intervalInMinutes} минут)\n${cc.reset}`);
+  stdout.write(`${fgColor} с ${sinceTime.toLocaleString()} (интервал - ${intervalInMinutes} минут)\n\n${cc.reset}`);
   printHoursHeader(camsIDs.length, fromTimeInSec, deepInHours, intervalInMinutes, intervalsCount, ident);
 
   for (const camID of camsIDs) {

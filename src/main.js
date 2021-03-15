@@ -32,13 +32,13 @@ config = {
 
 function run () {
   console.clear();
-  console.log(config.appFullTitle, '\n');
+  process.stdout.write(config.appFullTitle + '\n\n');
   const VideoArchive = require('./video-archive');
   const va = new VideoArchive(config);
   va.analize()
   .then((resultTables) => {
     // objectToFile(resultTables, './misc/result.json', true);
-    console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
+    // console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
     const Interface = require('./interface');
     new Interface(config, resultTables).run();
   })
