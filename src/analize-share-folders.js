@@ -20,7 +20,8 @@ const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
     let archDate = new Date(fromTime.getTime() - (ti.day * depth));
     const ds = dateStrings(archDate);
     for (let hour = 23; hour >= 0; hour--) {
-      const indexFileBaseName = `${ds.DD}${ds.MM}${ds.YY}${hour}.idx`;
+      const hourStr = new String(hour).padStart(2, '0');
+      const indexFileBaseName = `${ds.DD}${ds.MM}${ds.YY}${hourStr}.idx`;
       const indexFilePath = path.join(indexFolderPath, indexFileBaseName);
       if (fs.existsSync(indexFilePath)) {
         dayExists = true;
