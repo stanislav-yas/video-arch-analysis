@@ -1,13 +1,14 @@
-const app = require('./main');
 const {colours: cc} = require('./util');
 const { displayResultTable } = require('./display-results');
 const readline = require('readline');
+const config = require('./config');
 
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
 class Interface {
-  constructor(resultTables) {
+  constructor(config, resultTables) {
+    this.config = config;
     this.resultTables = resultTables;
     this.itemIndex = 0;
   }
@@ -39,7 +40,7 @@ class Interface {
 
   draw() {
     console.clear();
-    console.log(app.fullTitle);
+    console.log(this.config.appFullTitle);
     this.showMenu();
     this.showResult();
   }
@@ -57,13 +58,20 @@ class Interface {
     });
     // console.log('maxSlaveIdLength: ' + maxSlaveIdLength);
     for(let index = 0; index < this.resultTables.length; index++) {
-      const resultTable = this.resultTables[index];
-      let menuStr = resultTable.slave.id;
+      const { slave, continuousDepth } = this.resultTables[index];
+      let menuStr = slave.id;
       menuStr = menuStr.padEnd(maxSlaveIdLength + 1);
-      if(index === this.itemIndex) {
-        menuStr = cc.reverse + menuStr;
+      let fgColor = cc.reset;
+      if(continuousDepth < this.config.alarmDepth) {
+        fgColor += cc.fg.red + cc.bright;
+      } else if(continuousDepth < this.config.warningDepth) {
+        fgColor += cc.fg.yellow + cc.bright;
       }
-      console.log(` ${menuStr}[${resultTable.continuousDepth}]${cc.reset}`);
+      if(index === this.itemIndex) {
+        fgColor += cc.reverse;
+        // menuStr = cc.reverse + menuStr;
+      }
+      console.log(` ${fgColor}${menuStr}[${continuousDepth}]${cc.reset}`);
     }
   }
 
@@ -75,8 +83,9 @@ class Interface {
 
 module.exports = Interface;
 
-// (function run() {
-//   const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
-//   const interface = new Interface(resultTables);
-//   interface.run();
-// })();
+(function run() {
+  const config = require('./config');
+  const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
+  const interface = new Interface(config, resultTables);
+  interface.run();
+})();

@@ -1,11 +1,11 @@
 process.on('uncaughtException', (err) => {
-  console.error(`Произошла ошибка во время выполнения программы => ${err}`);
+  console.error(`Произошла непредвиденная ошибка во время выполнения программы => ${err}`);
 })
 
 const {colours: cc, objectFromJsonFile, objectToFile} = require('./util');
 const path = require('path');
 const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
-const config = require('./config');
+let config = require('./config');
 
 //process.env.MOCK = true; // true if use mock data
 
@@ -23,24 +23,24 @@ config.fromTime = new Date(
   59
 );
 
-const app = {
-  config,
-  title: package.description,
-  version: package.version,
-  fullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v${package.version})${cc.reset}`
+config = {
+  appTitle: package.description,
+  appVersion: package.version,
+  appFullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v${package.version})${cc.reset}`,
+  ...config
 }
 
 function run () {
   console.clear();
-  console.log(app.fullTitle);
+  console.log(config.appFullTitle, '\n');
   const VideoArchive = require('./video-archive');
-  const va = new VideoArchive(app.config);
+  const va = new VideoArchive(config);
   va.analize()
   .then((resultTables) => {
     // objectToFile(resultTables, './misc/result.json', true);
     console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
     const Interface = require('./interface');
-    new Interface(resultTables).run();
+    new Interface(config, resultTables).run();
   })
   .catch((err) => {
     console.error(`Analize was failed => ${err}`);
@@ -48,5 +48,4 @@ function run () {
   .finally(() => va.closeConnection());
 };
 
-module.exports = app;
 run();
