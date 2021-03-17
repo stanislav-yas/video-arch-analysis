@@ -11,9 +11,10 @@ class Interface {
     this.config = config;
     this.resultTables = resultTables;
     this.itemIndex = 0;
+    this._onKeyPressed = this._onKeyPressed.bind(this);
   }
 
-  _onKeyPressed = (str, key) => {
+  _onKeyPressed(str, key) {
     switch(key.name) {
       case 'down':
       case 'space':

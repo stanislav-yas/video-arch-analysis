@@ -4,7 +4,7 @@ process.on('uncaughtException', (err) => {
 
 const {colours: cc, objectFromJsonFile, objectToFile} = require('./util');
 const path = require('path');
-const package = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
+const packageJson = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
 let config = require('./config');
 
 //process.env.MOCK = true; // true if use mock data
@@ -24,9 +24,9 @@ config.fromTime = new Date(
 );
 
 config = {
-  appTitle: package.description,
-  appVersion: package.version,
-  appFullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${package.description} (v${package.version})${cc.reset}`,
+  appTitle: packageJson.description,
+  appVersion: packageJson.version,
+  appFullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${packageJson.description} (v${packageJson.version})${cc.reset}`,
   ...config
 }
 
