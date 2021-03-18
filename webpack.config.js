@@ -5,7 +5,7 @@ const webpack = require('webpack');
 module.exports = {
   mode: 'development',
   stats: {
-    errorDetails: true
+    errorDetails: false
   },
   entry: './src/main.js',
   target: 'node',

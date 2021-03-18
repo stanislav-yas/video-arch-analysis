@@ -4,8 +4,8 @@ process.on('uncaughtException', (err) => {
 
 const {colours: cc, objectFromJsonFile, objectToFile} = require('./util');
 const path = require('path');
-const packageJson = objectFromJsonFile(path.join(process.cwd(), 'package.json'));
-let config = require('./config');
+const packageJson = objectFromJsonFile(path.resolve(process.cwd(), 'package.json'));
+let config = require('./app-config');
 
 //process.env.MOCK = true; // true if use mock data
 
