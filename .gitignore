@@ -2,5 +2,7 @@
 package-lock.json
 /mock-data
 /dist
+/build
+
 
 
