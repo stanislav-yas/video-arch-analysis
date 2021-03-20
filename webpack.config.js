@@ -3,9 +3,9 @@ const webpack = require('webpack');
 // const nodeExternals = require('webpack-node-externals');
 const packageJson = require('./package.json');
 const __version__ = packageJson.version;
-const __entryPath__ = path.join(__dirname, 'src');
-const __outputPath__ = path.join(__dirname, 'build', __version__);
-const __outputFilename__ = 'index.js';
+const __entryPath__ = path.join(__dirname, 'src', 'cli');
+const __outputPath__ = path.join(__dirname, 'dist', __version__, 'cli');
+const __outputFileName__ = 'index.js';
 
 module.exports = {
   // mode: 'development',
@@ -18,11 +18,11 @@ module.exports = {
   output: {
     clean: false, // Clean the output directory before emit.
     path: __outputPath__,
-    filename: __outputFilename__
+    filename: __outputFileName__
   },
   externals: [
     { 
-      './config': 'commonjs ./config',
+      '../app.config': 'commonjs ../app.config',
       'msnodesqlv8': 'commonjs msnodesqlv8'
     },
     // nodeExternals()
@@ -33,7 +33,7 @@ module.exports = {
       apply: (compiler) => {
         compiler.hooks.done.tap('MyAfterBuildPlugin => ', async (compilation) => {
           const afterBuild = require('./after-build.js');
-          await afterBuild(__entryPath__, __outputPath__,  __outputFilename__);
+          await afterBuild(__entryPath__, __outputPath__,  __outputFileName__);
         });
       }
     }
