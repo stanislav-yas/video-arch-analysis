@@ -7,8 +7,6 @@ const path = require('path');
 const packageJson = objectFromJsonFile(path.resolve(process.cwd(), 'package.json'));
 let config = require('../app.config');
 
-// process.env.MOCK = true; // true if use mock data
-
 const curTime = config.MOCK ?
   new Date('2021-03-06T12:10:00') :
   new Date();

@@ -2,10 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 // const nodeExternals = require('webpack-node-externals');
 const packageJson = require('./package.json');
-const __version__ = packageJson.version;
-const __entryPath__ = path.join(__dirname, 'src', 'cli');
-const __outputPath__ = path.join(__dirname, 'dist', __version__, 'cli');
-const __outputFileName__ = 'index.js';
+const _version_ = packageJson.version;
+const _entryPath_ = path.join(__dirname, 'src', 'cli');
+const _outputPath_ = path.join(__dirname, 'dist', _version_, 'cli');
+const _outputFileName_ = 'index.js';
 
 module.exports = {
   // mode: 'development',
@@ -13,12 +13,12 @@ module.exports = {
   stats: {
     errorDetails: false
   },
-  entry: path.join(__entryPath__, 'main.js'),
+  entry: path.join(_entryPath_, 'main.js'),
   target: 'node',
   output: {
     clean: false, // Clean the output directory before emit.
-    path: __outputPath__,
-    filename: __outputFileName__
+    path: _outputPath_,
+    filename: _outputFileName_
   },
   externals: [
     { 
@@ -34,7 +34,7 @@ module.exports = {
         compiler.hooks.done.tap('MyCompilerHookDone', async (stats) => {
           if(stats.hasErrors()) return; // compilation has errors
           const afterBuild = require('./after-build.js');
-          await afterBuild(__entryPath__, __outputPath__,  __outputFileName__);
+          await afterBuild(_entryPath_, _outputPath_,  _outputFileName_);
         });
       }
     }

@@ -9,9 +9,9 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
   let fileDestPath = path.join(outputPath, '../', fileName);
   try {
     await fse.copyFile(fileSrcPath, fileDestPath);
-    console.log(`${fileName} was copied to ${fileDestPath}`);
+    console.log(`"${fileName}" was copied to ${fileDestPath}`);
   } catch(err) {
-    console.error(`copying of ${fileName} was failed =>`, err);
+    console.error(`copying of "${fileName}" was failed => `, err);
     throw err;
   }
 
@@ -45,9 +45,9 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
       fileDestPath,
       JSON.stringify(newPackageJson, null, '  '),
       'utf8');
-    console.log(`${fileName} was copied to ${fileDestPath}`);
+    console.log(`"${fileName}" was copied to ${fileDestPath}`);
   } catch(err) {
-    console.error(`copying of ${fileName} was failed =>`, err);
+    console.error(`copying of "${fileName}" was failed => `, err);
   }
 
   // copying of 'msnodesqlv8' package
@@ -56,9 +56,9 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
   const packageDestPath = path.join(outputPath, '../node_modules', packageName);
   try{
     await fse.copy(packageSrcPath, packageDestPath);
-    console.log(`package \"${packageName}\" was copied to ${packageDestPath}`);
+    console.log(`package "${packageName}" was copied to ${packageDestPath}`);
   } catch(err) {
-    console.error(`copying of package \"${packageName}\" was failed =>`, err);
+    console.error(`copying of package "${packageName}" was failed => `, err);
     throw err;
   }
 }
