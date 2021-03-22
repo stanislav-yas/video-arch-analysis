@@ -2,9 +2,9 @@
   "name": "video-arch-analysis",
   "version": "1.1.0",
   "description": "Анализ видеоархива по индексным файлам",
-  "main": "main.js",
+  "main": "src/cli/main.js",
   "scripts": {
-    "start": "node src/main.js",
+    "start": "node src/cli/main.js",
     "build": "webpack"
   },
   "keywords": [],

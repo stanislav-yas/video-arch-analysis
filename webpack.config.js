@@ -31,7 +31,8 @@ module.exports = {
     new webpack.ProgressPlugin(),
     { // my Compiler hook 'done' plugin
       apply: (compiler) => {
-        compiler.hooks.done.tap('MyAfterBuildPlugin => ', async (compilation) => {
+        compiler.hooks.done.tap('MyCompilerHookDone', async (stats) => {
+          if(stats.hasErrors()) return; // compilation has errors
           const afterBuild = require('./after-build.js');
           await afterBuild(__entryPath__, __outputPath__,  __outputFileName__);
         });

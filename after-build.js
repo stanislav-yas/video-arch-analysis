@@ -53,7 +53,7 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
   // copying of 'msnodesqlv8' package
   const packageName = 'msnodesqlv8';
   const packageSrcPath = path.join(process.cwd(), 'node_modules', packageName);
-  const packageDestPath = path.join(outputPath, 'node_modules', packageName);
+  const packageDestPath = path.join(outputPath, '../node_modules', packageName);
   try{
     await fse.copy(packageSrcPath, packageDestPath);
     console.log(`package \"${packageName}\" was copied to ${packageDestPath}`);
