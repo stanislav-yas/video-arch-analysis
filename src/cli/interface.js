@@ -57,7 +57,6 @@ class Interface {
     this.resultTables.forEach(rt => {
       if(rt.slave.id.length > maxSlaveIdLength) maxSlaveIdLength = rt.slave.id.length;
     });
-    // console.log('maxSlaveIdLength: ' + maxSlaveIdLength);
     for(let index = 0; index < this.resultTables.length; index++) {
       const { slave, continuousDepth } = this.resultTables[index];
       let menuStr = slave.id;
@@ -70,7 +69,6 @@ class Interface {
       }
       if(index === this.itemIndex) {
         fgColor += cc.reverse;
-        // menuStr = cc.reverse + menuStr;
       }
       stdout.write(` ${fgColor}${menuStr}[${continuousDepth}]${cc.reset}\n`);
     }
