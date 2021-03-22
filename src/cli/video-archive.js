@@ -77,7 +77,7 @@ class VideoArchive {
   }
 }
 
-if(process.env.MOCK) {
+if(config.MOCK) {
   const { getSlaves, getCams } = require('./mock/get-mock-data');
   VideoArchive.prototype.getSlaves = getSlaves;
   VideoArchive.prototype.getCams = getCams

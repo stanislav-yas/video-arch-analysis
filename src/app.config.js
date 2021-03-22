@@ -10,7 +10,7 @@ const config = {
     uid: 'sa',
     pwd: 'ITV'
   },
-  // MOCK: true // true if use mock data
+  MOCK: true // true if use mock data
 };
 
 module.exports = config;

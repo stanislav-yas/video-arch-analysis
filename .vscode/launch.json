@@ -11,7 +11,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\src\\main.js"
+      "program": "${workspaceFolder}\\src\\cli\\main.js"
     },
     {
       "type": "node",
@@ -20,7 +20,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\src\\display-results.js"
+      "program": "${workspaceFolder}\\src\\cli\\display-results.js"
     },
     {
       "type": "node",
@@ -29,7 +29,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\src\\interface.js"
+      "program": "${workspaceFolder}\\src\\cli\\interface.js"
     }
   ]
 }
