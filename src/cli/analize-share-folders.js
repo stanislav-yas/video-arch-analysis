@@ -35,7 +35,7 @@ const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 
 async function analizeSlave(slave, config) {
   const { fromTime, deepInHours } = config;
-  const indexFolderPath = config.MOCK ?
+  const indexFolderPath = process._MOCK_ ?
     path.join(slavesMockDirPath, slave.id, 'INDEX') :
     path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
 

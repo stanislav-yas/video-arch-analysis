@@ -7,11 +7,12 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch main.js",
+      "name": "Launch main.js MOCK",
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\src\\cli\\main.js"
+      "program": "${workspaceFolder}\\src\\cli\\main.js",
+      "args": ["MOCK"]
     },
     {
       "type": "node",

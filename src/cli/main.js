@@ -7,12 +7,16 @@ const path = require('path');
 const packageJson = objectFromJsonFile(path.resolve(process.cwd(), 'package.json'));
 let config = require('../app.config');
 
-const curTime = config.MOCK ?
+if(process.argv.includes("MOCK", 2)) {
+  process._MOCK_ = true; // use mock data
+}
+
+const curTime = process._MOCK_ ?
   new Date('2021-03-06T12:10:00') :
   new Date();
 
 // конец предыдущего часа
-config.fromTime = new Date(
+const fromTime = new Date(
   curTime.getFullYear(),
   curTime.getMonth(),
   curTime.getDate(),
@@ -25,6 +29,7 @@ config = {
   appTitle: packageJson.description,
   appVersion: packageJson.version,
   appFullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${packageJson.description} (v${packageJson.version})${cc.reset}`,
+  fromTime,
   ...config
 }
 

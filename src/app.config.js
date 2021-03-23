@@ -9,8 +9,7 @@ const config = {
     database: 'intellect',
     uid: 'sa',
     pwd: 'ITV'
-  },
-  MOCK: true // true if use mock data
+  }
 };
 
 module.exports = config;
