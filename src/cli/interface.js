@@ -1,8 +1,8 @@
-const {colours: cc} = require('./util');
-const { displayResultTable } = require('./display-results');
-const { stdout } = process;
 const readline = require('readline');
+const { colours: cc } = require('./util');
+const { displayResultTable } = require('./display-results');
 
+const { stdout } = process;
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
@@ -15,33 +15,32 @@ class Interface {
   }
 
   _onKeyPressed(str, key) {
-    switch(key.name) {
+    switch (key.name) {
       case 'down':
       case 'space':
-      case 'return': 
+      case 'return':
         this.itemIndex++;
         if (this.itemIndex === this.resultTables.length) {
           this.itemIndex = 0;
         }
         this.draw();
         break;
-
       case 'up':
         this.itemIndex--;
-        if(this.itemIndex < 0) {
+        if (this.itemIndex < 0) {
           this.itemIndex = this.resultTables.length - 1;
         }
         this.draw();
         break;
-
       case 'escape':
         process.exit(0);
+      // no default
     }
   }
 
   draw() {
     console.clear();
-    stdout.write(this.config.appFullTitle + '\n');
+    stdout.write(`${this.config.appFullTitle}\n`);
     this.showMenu();
     this.showResult();
   }
@@ -54,20 +53,20 @@ class Interface {
     stdout.write(`\n${cc.reset} Выбирите доступный компьютер с видеоархивом (${cc.fg.yellow}↑ ↓ Space Enter , Esc - выход${cc.reset}):\n\n компьютер  [непрер. глубина в/архива в днях]\n\n`);
 
     let maxSlaveIdLength = 0;
-    this.resultTables.forEach(rt => {
-      if(rt.slave.id.length > maxSlaveIdLength) maxSlaveIdLength = rt.slave.id.length;
+    this.resultTables.forEach((rt) => {
+      if (rt.slave.id.length > maxSlaveIdLength) maxSlaveIdLength = rt.slave.id.length;
     });
-    for(let index = 0; index < this.resultTables.length; index++) {
+    for (let index = 0; index < this.resultTables.length; index++) {
       const { slave, continuousDepth } = this.resultTables[index];
       let menuStr = slave.id;
       menuStr = menuStr.padEnd(maxSlaveIdLength + 1);
       let fgColor = cc.reset;
-      if(continuousDepth < this.config.alarmDepth) {
+      if (continuousDepth < this.config.alarmDepth) {
         fgColor += cc.fg.red + cc.bright;
-      } else if(continuousDepth < this.config.warningDepth) {
+      } else if (continuousDepth < this.config.warningDepth) {
         fgColor += cc.fg.yellow + cc.bright;
       }
-      if(index === this.itemIndex) {
+      if (index === this.itemIndex) {
         fgColor += cc.reverse;
       }
       stdout.write(` ${fgColor}${menuStr}[${continuousDepth}]${cc.reset}\n`);

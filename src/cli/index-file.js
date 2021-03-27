@@ -1,40 +1,35 @@
-const {dateStrings} = require('./util');
-
 const fsP = require('fs').promises;
-const path = require('path');
-const { ResultTable } = require('./result-table');
+
+// const { ResultTable } = require('./result-table');
 
 const UNKNOWN_INDEX_FILE_FORMAT_ERROR_MESSAGE = 'unkwnown index file format';
 const INDEX_FILE_FORMAT_ERROR_MESSAGE = 'index file format error';
 
-function getStructureLength (descr) {
-
+function getStructureLength(descr) {
   const descrMap = [
     { descr: 0xAB00, strLen: 23 },
-    { descr: 0xAB01, strLen: 25 }
+    { descr: 0xAB01, strLen: 25 },
   ];
 
-  const mapElement = descrMap.find((element) => element.descr === descr)
+  const mapElement = descrMap.find((element) => element.descr === descr);
 
   if (mapElement) {
-    return mapElement.strLen
-  } else {
-    return undefined
+    return mapElement.strLen;
   }
+  return undefined;
 }
 
 /**
- * 
+ * Video index file parsing
  * @param {path} filePath path to index file
- * @param {ResultTable} rt result table after index file parsing
+ * @param {ResultTable} resultTable result table after index file parsing
  */
-async function parseIndexFile (filePath, rt) {
-
+async function parseIndexFile(filePath, resultTable) {
   const buf = Buffer.alloc(30);
-  let strLen = undefined;
+  let strLen;
   let fh = null;
   try {
-    fh = await fsP.open(filePath,'r');
+    fh = await fsP.open(filePath, 'r');
 
     // file description reading
     const descriptionLength = 4; // 4 bytes
@@ -61,13 +56,12 @@ async function parseIndexFile (filePath, rt) {
       const beginTimeInSec = buffer.readUInt32LE(0);
       const endTimeInSec = buffer.readUInt32LE(4);
       const camID = buffer.readUInt16LE(21);
-      rt.totalFragmentsCount++;
-      rt.ckeckFragment(beginTimeInSec, endTimeInSec, camID);
+      resultTable.totalFragmentsCount++;
+      resultTable.ckeckFragment(beginTimeInSec, endTimeInSec, camID);
       cnt++;
     }
-    
-   return { cnt, rt };
 
+    return { cnt, rt: resultTable };
   } finally {
     if (fh) {
       await fh.close();
@@ -75,23 +69,4 @@ async function parseIndexFile (filePath, rt) {
   }
 }
 
-/**
- * Getting RegExp for testing files in index folder
- * @param {{
- *  fromTime: Date,
- *  deepInHours: number
- * }} conditions
- * @returns {RegExp}
- */
-function getRegExp (conditions) {
-  // 08022108.idx
-  const {fromTime, deepInHours} = conditions;
-  const ds = dateStrings(fromTime);
-  const dd = ds.DD;
-  const mm = ds.MM;
-  const yy = ds.YY;
-  const hh = ds.HH;
-  const re = /^[0-9]{8}\.idx/;
-  return re.test(file);
-}
- module.exports = { parseIndexFile, getRegExp }
+module.exports = { parseIndexFile };

@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const path = require('path');
 const fs = require('fs');
 
@@ -13,14 +14,15 @@ const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
  * @param { path } indexFolderPath путь к папке с индексными файлами
  * @returns { number } глубина непрерывного видеоархива в днях
  */
- function countContinuousDepth (fromTime, indexFolderPath) {
-  let depth = 0, dayExists;
+function countContinuousDepth(fromTime, indexFolderPath) {
+  let depth = 0;
+  let dayExists;
   do {
     dayExists = false;
-    let archDate = new Date(fromTime.getTime() - (ti.day * depth));
+    const archDate = new Date(fromTime.getTime() - (ti.day * depth));
     const ds = dateStrings(archDate);
     for (let hour = 23; hour >= 0; hour--) {
-      const hourStr = new String(hour).padStart(2, '0');
+      const hourStr = hour.toString(10).padStart(2, '0');
       const indexFileBaseName = `${ds.DD}${ds.MM}${ds.YY}${hourStr}.idx`;
       const indexFilePath = path.join(indexFolderPath, indexFileBaseName);
       if (fs.existsSync(indexFilePath)) {
@@ -29,15 +31,15 @@ const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
         break;
       }
     }
-  } while(dayExists)
+  } while (dayExists);
   return depth;
 }
 
 async function analizeSlave(slave, config) {
   const { fromTime, deepInHours } = config;
-  const indexFolderPath = process._MOCK_ ?
-    path.join(slavesMockDirPath, slave.id, 'INDEX') :
-    path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
+  const indexFolderPath = process.MOCK
+    ? path.join(slavesMockDirPath, slave.id, 'INDEX')
+    : path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
 
   const resultTable = new ResultTable(slave, config);
   resultTable.continuousDepth = countContinuousDepth(fromTime, indexFolderPath);
@@ -49,8 +51,7 @@ async function analizeSlave(slave, config) {
     const indexFilePath = path.join(indexFolderPath, indexFileBaseName);
     if (fs.existsSync(indexFilePath)) {
       try {
-        const { cnt } = await parseIndexFile(indexFilePath, resultTable);
-        // console.log(`${indexFilePath} => ${cnt} fragment(s) parsed`);
+        await parseIndexFile(indexFilePath, resultTable);
         // console.log(`${rt.totalCheckedFragmentsCount} fragments checked`);
       } catch (err) {
         console.error(`Error was occurred in parseIndexFile function => ${err}`);
@@ -63,12 +64,12 @@ async function analizeSlave(slave, config) {
 }
 
 async function analize(slaves, config) {
-
   const resultTables = [];
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const slave of slaves) {
     process.stdout.write(`анализ в/врхива на ${slave.id} ...`);
-    resultTable = await analizeSlave(slave, config);
+    const resultTable = await analizeSlave(slave, config);
     console.log(`выполнен => ${resultTable.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${resultTable.continuousDepth} дня(дней)\n`);
     resultTables.push(resultTable);
   }

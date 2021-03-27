@@ -8,8 +8,8 @@ const config = {
     dbServer: '(local)\\SQLEXPRESS',
     database: 'intellect',
     uid: 'sa',
-    pwd: 'ITV'
-  }
+    pwd: 'ITV',
+  },
 };
 
 module.exports = config;

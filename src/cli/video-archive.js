@@ -13,21 +13,18 @@ const querySlaves = `
     and (c.flags = 0 or c.flags is null)
   order by 1`;
 
-const queryCams = (slaveID) => {
-  return (
-    `SELECT 
-    CAST(c.id as int) 'id',
-    c.[name] 'name'
-    FROM OBJ_CAM c, OBJ_GRABBER g
-    where c.parent_id=g.id
-    and (c.flags = 0 or c.flags is null)
-    and g.parent_id = '${slaveID}'
-    order by 1`
-  );
-}
+const queryCams = (slaveID) => (
+  `SELECT 
+  CAST(c.id as int) 'id',
+  c.[name] 'name'
+  FROM OBJ_CAM c, OBJ_GRABBER g
+  where c.parent_id=g.id
+  and (c.flags = 0 or c.flags is null)
+  and g.parent_id = '${slaveID}'
+  order by 1`
+);
 
 class VideoArchive {
-
   constructor(config) {
     this.config = config;
     this.connection = null;
@@ -39,13 +36,13 @@ class VideoArchive {
       this.connection = await db.sqlOpenAsync(this.connectionOptions);
     }
   }
-  
+
   async getSlaves() {
     await this.checkConnection();
     const slaves = await db.connQueryAsync(this.connection, querySlaves);
     return slaves;
   }
-  
+
   async getCams(slaveID) {
     await this.checkConnection();
     const cams = await db.connQueryAsync(this.connection, queryCams(slaveID));
@@ -53,19 +50,19 @@ class VideoArchive {
   }
 
   async analize() {
-      
-    let slaves = await this.getSlaves();
+    const slaves = await this.getSlaves();
     // slaves = [slaves[0]]; // for debug use!
-    for (const slave of slaves) {
-      const cams = await this.getCams(slave.id); // cams = [{'id1', 'name1'}, {'id2', 'name2'}, ...]
-      let camsIX = {}; // camsIX = {id1:'name1', id2:'name2', ...}
+    slaves.forEach((slave) => {
+      const cams = this.getCams(slave.id); // cams = [{'id1', 'name1'}, {'id2', 'name2'}, ...]
+      const camsIX = {}; // camsIX = {id1:'name1', id2:'name2', ...}
+      // eslint-disable-next-line no-param-reassign
       slave.cams = camsIX;
-      cams.forEach(cam => {
+      cams.forEach((cam) => {
         camsIX[Number.parseInt(cam.id, 10)] = cam.name;
       });
-      //console.log(`Cams count  = ${cams.length}`);
-    };
-  
+      // console.log(`Cams count  = ${cams.length}`);
+    });
+
     // require('./util').objectToFile(slaves[10], 'slave.txt', true);
     return analizeShareFolders(slaves, this.config);
   }
@@ -77,10 +74,10 @@ class VideoArchive {
   }
 }
 
-if(process._MOCK_) {
+if (process.MOCK) {
   const { getSlaves, getCams } = require('./mock/get-mock-data');
   VideoArchive.prototype.getSlaves = getSlaves;
-  VideoArchive.prototype.getCams = getCams
+  VideoArchive.prototype.getCams = getCams;
 }
 
 module.exports = VideoArchive;

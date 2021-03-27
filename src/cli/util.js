@@ -1,23 +1,23 @@
 /**
  * Getting Date strings
- * @param {Date} date 
+ * @param {Date} date
  */
 const dateStrings = (date) => {
-  const MONTHS = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`,
-    `September`, `October`, `November`, `December`];
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+    'September', 'October', 'November', 'December'];
   return {
     D: date.getDate().toString(),
-    DD: (`0` + date.getDate()).slice(-2),
+    DD: (`0${date.getDate()}`).slice(-2),
     M: (date.getMonth() + 1).toString(),
-    MM: (`0` + (date.getMonth() + 1)).slice(-2),
+    MM: (`0${date.getMonth() + 1}`).slice(-2),
     MMM: MONTHS[date.getMonth()].slice(0, 3),
     MMMM: MONTHS[date.getMonth()],
     YY: date.getFullYear().toString().slice(-2),
     YYYY: date.getFullYear().toString(),
-    hh: (`0` + date.getHours()).slice(-2),
-    mm: (`0` + date.getMinutes()).slice(-2),
-    ss: (`0` + date.getSeconds()).slice(-2),
-    ampm: (date.getHours() >= 12 ? `PM` : `AM`)
+    hh: (`0${date.getHours()}`).slice(-2),
+    mm: (`0${date.getMinutes()}`).slice(-2),
+    ss: (`0${date.getSeconds()}`).slice(-2),
+    ampm: (date.getHours() >= 12 ? 'PM' : 'AM'),
   };
 };
 
@@ -29,7 +29,7 @@ const timeInts = {
   minute: 1000 * 60,
   hour: 1000 * 60 * 60,
   day: 1000 * 60 * 60 * 24,
-}
+};
 
 /**
  * Saving any Object to file
@@ -48,7 +48,7 @@ const objectToFile = (obj, filePath, isLogged = false) => {
       console.log(`The file ${filePath} has been saved!`);
     }
   });
-}
+};
 
 /**
  * Creating JSON Object from file
@@ -59,39 +59,39 @@ const objectToFile = (obj, filePath, isLogged = false) => {
 const objectFromJsonFile = (jsonFilePath, encoding = 'utf8') => {
   const loadedString = require('fs').readFileSync(jsonFilePath, encoding);
   return JSON.parse(loadedString);
-}
+};
 
 const colours = {
-  reset: "\x1b[0m",
-  bright: "\x1b[1m",
-  dim: "\x1b[2m",
-  underscore: "\x1b[4m",
-  blink: "\x1b[5m",
-  reverse: "\x1b[7m",
-  hidden: "\x1b[8m",
-  
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  dim: '\x1b[2m',
+  underscore: '\x1b[4m',
+  blink: '\x1b[5m',
+  reverse: '\x1b[7m',
+  hidden: '\x1b[8m',
+
   fg: {
-      black: "\x1b[30m",
-      red: "\x1b[31m",
-      green: "\x1b[32m",
-      yellow: "\x1b[33m",
-      blue: "\x1b[34m",
-      magenta: "\x1b[35m",
-      cyan: "\x1b[36m",
-      white: "\x1b[37m",
-      crimson: "\x1b[38m" // Scarlet
+    black: '\x1b[30m',
+    red: '\x1b[31m',
+    green: '\x1b[32m',
+    yellow: '\x1b[33m',
+    blue: '\x1b[34m',
+    magenta: '\x1b[35m',
+    cyan: '\x1b[36m',
+    white: '\x1b[37m',
+    crimson: '\x1b[38m', // Scarlet
   },
   bg: {
-      black: "\x1b[40m",
-      red: "\x1b[41m",
-      green: "\x1b[42m",
-      yellow: "\x1b[43m",
-      blue: "\x1b[44m",
-      magenta: "\x1b[45m",
-      cyan: "\x1b[46m",
-      white: "\x1b[47m",
-      crimson: "\x1b[48m"
-  }
+    black: '\x1b[40m',
+    red: '\x1b[41m',
+    green: '\x1b[42m',
+    yellow: '\x1b[43m',
+    blue: '\x1b[44m',
+    magenta: '\x1b[45m',
+    cyan: '\x1b[46m',
+    white: '\x1b[47m',
+    crimson: '\x1b[48m',
+  },
 };
 
 /**
@@ -120,5 +120,5 @@ module.exports = {
   objectToFile,
   objectFromJsonFile,
   colours,
-  checkKeyPress
-}
+  checkKeyPress,
+};

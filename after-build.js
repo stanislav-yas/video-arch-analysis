@@ -2,15 +2,14 @@ const fse = require('fs-extra');
 const path = require('path');
 
 module.exports = async (entryPath, outputPath, outputFileName) => {
-
   // copying of 'app.config.js'
   let fileName = 'app.config.js';
-  let fileSrcPath = path.join(entryPath, '../', fileName);
+  const fileSrcPath = path.join(entryPath, '../', fileName);
   let fileDestPath = path.join(outputPath, '../', fileName);
   try {
     await fse.copyFile(fileSrcPath, fileDestPath);
     console.log(`"${fileName}" was copied to ${fileDestPath}`);
-  } catch(err) {
+  } catch (err) {
     console.error(`copying of "${fileName}" was failed => `, err);
     throw err;
   }
@@ -22,7 +21,7 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
     description,
     author,
     license,
-    dependencies
+    dependencies,
   } = require('./package.json');
 
   const newPackageJson = {
@@ -31,22 +30,23 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
     description,
     main: `cli/${outputFileName}`,
     scripts: {
-      "start": "node cli"
+      start: 'node cli',
     },
     author,
     license,
-    dependencies
+    dependencies,
   };
 
   fileName = 'package.json';
   fileDestPath = path.join(outputPath, '../', fileName);
-  try{
+  try {
     await fse.writeFile(
       fileDestPath,
       JSON.stringify(newPackageJson, null, '  '),
-      'utf8');
+      'utf8',
+    );
     console.log(`"${fileName}" was copied to ${fileDestPath}`);
-  } catch(err) {
+  } catch (err) {
     console.error(`copying of "${fileName}" was failed => `, err);
   }
 
@@ -54,13 +54,13 @@ module.exports = async (entryPath, outputPath, outputFileName) => {
   const packageName = 'msnodesqlv8';
   const packageSrcPath = path.join(process.cwd(), 'node_modules', packageName);
   const packageDestPath = path.join(outputPath, '../node_modules', packageName);
-  try{
+  try {
     await fse.copy(packageSrcPath, packageDestPath);
     console.log(`package "${packageName}" was copied to ${packageDestPath}`);
-  } catch(err) {
+  } catch (err) {
     console.error(`copying of package "${packageName}" was failed => `, err);
     throw err;
   }
-}
+};
 
 // module.exports(path.join(__dirname, 'src'), path.join(process.cwd(), 'dist'));
