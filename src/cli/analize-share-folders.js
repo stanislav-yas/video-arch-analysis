@@ -1,9 +1,11 @@
-/* eslint-disable no-await-in-loop */
+/** @typedef {import('./slave')} Slave видеосервер */
+/** @typedef {import('../app.config')} Config параметры анализа */
+
 const path = require('path');
 const fs = require('fs');
 
 const { parseIndexFile } = require('./index-file');
-const { ResultTable } = require('./result-table');
+const { AnalysisResult } = require('./analysis-result');
 const { dateStrings, timeInts: ti } = require('./util');
 
 const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
@@ -35,14 +37,20 @@ function countContinuousDepth(fromTime, indexFolderPath) {
   return depth;
 }
 
+/**
+ * Проанализировать видеоархив на видеосервере
+ * @param {Slave} slave видеосервер
+ * @param {Config} config параметры анализа
+ * @returns {AnalysisResult}
+ */
 async function analizeSlave(slave, config) {
   const { fromTime, deepInHours } = config;
   const indexFolderPath = process.MOCK
     ? path.join(slavesMockDirPath, slave.id, 'INDEX')
     : path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
 
-  const resultTable = new ResultTable(slave, config);
-  resultTable.continuousDepth = countContinuousDepth(fromTime, indexFolderPath);
+  const aResult = new AnalysisResult(slave, config);
+  aResult.continuousDepth = countContinuousDepth(fromTime, indexFolderPath);
 
   for (let index = 0; index < deepInHours; index++) {
     const archDate = new Date(fromTime.getTime() - (ti.hour * index));
@@ -51,7 +59,7 @@ async function analizeSlave(slave, config) {
     const indexFilePath = path.join(indexFolderPath, indexFileBaseName);
     if (fs.existsSync(indexFilePath)) {
       try {
-        await parseIndexFile(indexFilePath, resultTable);
+        await parseIndexFile(indexFilePath, aResult);
         // console.log(`${rt.totalCheckedFragmentsCount} fragments checked`);
       } catch (err) {
         console.error(`Error was occurred in parseIndexFile function => ${err}`);
@@ -60,21 +68,27 @@ async function analizeSlave(slave, config) {
       console.warn(`${indexFilePath} doesn't exist`);
     }
   }
-  return resultTable;
+  return aResult;
 }
 
+/**
+ * Проанализировать видеоархивы на видеосерверах
+ * @param {Slave} slaves видеосерверы
+ * @param {Config} config параметры анализа
+ * @returns {[AnalysisResult]}
+ */
 async function analize(slaves, config) {
-  const resultTables = [];
+  const aResults = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for (const slave of slaves) {
     process.stdout.write(`анализ в/врхива на ${slave.id} ...`);
-    const resultTable = await analizeSlave(slave, config);
-    console.log(`выполнен => ${resultTable.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${resultTable.continuousDepth} дня(дней)\n`);
-    resultTables.push(resultTable);
+    const aResult = await analizeSlave(slave, config);
+    console.log(`выполнен => ${aResult.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${aResult.continuousDepth} дня(дней)\n`);
+    aResults.push(aResult);
   }
 
-  return resultTables;
+  return aResults;
 }
 
 module.exports = analize;

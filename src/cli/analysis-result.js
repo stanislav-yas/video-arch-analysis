@@ -1,8 +1,20 @@
-const getTimeMapIndex = (fromTimeInSec, timeInSec, intervalInMinutes) => Math.floor(
-  (fromTimeInSec - timeInSec) / (60 * intervalInMinutes),
-);
+/** @typedef {import('./slave')} Slave видеосервер */
+/** @typedef {import('../app.config')} Config параметры анализа */
 
-class ResultTable {
+function getTimeMapIndex(fromTimeInSec, timeInSec, intervalInMinutes) {
+  return Math.floor(
+    (fromTimeInSec - timeInSec) / (60 * intervalInMinutes),
+  );
+}
+
+/**
+ * Результирующий объект анализа видеоархива
+ */
+class AnalysisResult {
+  /**
+   * @param {Slave} slave видеосервер
+   * @param {Config} config параметры анализа
+   */
   constructor(slave, config) {
     this.slave = slave;
     this.config = config;
@@ -49,4 +61,4 @@ class ResultTable {
   }
 }
 
-module.exports = { ResultTable };
+module.exports = { AnalysisResult };
