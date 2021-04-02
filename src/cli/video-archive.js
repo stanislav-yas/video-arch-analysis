@@ -52,16 +52,16 @@ class VideoArchive {
   async analize() {
     const slaves = await this.getSlaves();
     // slaves = [slaves[0]]; // for debug use!
-    slaves.forEach((slave) => {
-      const cams = this.getCams(slave.id); // cams = [{'id1', 'name1'}, {'id2', 'name2'}, ...]
+    // eslint-disable-next-line no-restricted-syntax
+    for (const slave of slaves) {
+      const cams = await this.getCams(slave.id); // cams = [{'id1', 'name1'}, {'id2', 'name2'}, ...]
       const camsIX = {}; // camsIX = {id1:'name1', id2:'name2', ...}
-      // eslint-disable-next-line no-param-reassign
       slave.cams = camsIX;
       cams.forEach((cam) => {
         camsIX[Number.parseInt(cam.id, 10)] = cam.name;
       });
       // console.log(`Cams count  = ${cams.length}`);
-    });
+    }
 
     // require('./util').objectToFile(slaves[10], 'slave.txt', true);
     return analizeShareFolders(slaves, this.config);
