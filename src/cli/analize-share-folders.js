@@ -1,11 +1,13 @@
-/** @typedef {import('./slave')} Slave видеосервер */
+//TODO delete this module after refactoring!
+// @ts-check
+/** @typedef {import('../lib/slave')} Slave видеосервер */
 /** @typedef {import('../app.config')} Config параметры анализа */
 
 const path = require('path');
 const fs = require('fs');
 
-const { parseIndexFile } = require('./index-file');
-const { AnalysisResult } = require('./analysis-result');
+const parseIndexFile = require('../lib/parse-index-file');
+const AnalysisResult = require('../lib/analysis-result');
 const { dateStrings, timeInts: ti } = require('./util');
 
 const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
@@ -13,7 +15,7 @@ const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 /**
  * Вычисление непрерывной глубины видеоархива по индексным файлам
  * @param { Date } fromTime дата отсчёта глубины
- * @param { path } indexFolderPath путь к папке с индексными файлами
+ * @param { string } indexFolderPath путь к папке с индексными файлами
  * @returns { number } глубина непрерывного видеоархива в днях
  */
 function countContinuousDepth(fromTime, indexFolderPath) {
@@ -41,12 +43,12 @@ function countContinuousDepth(fromTime, indexFolderPath) {
  * Проанализировать видеоархив на видеосервере
  * @param {Slave} slave видеосервер
  * @param {Config} config параметры анализа
- * @returns {AnalysisResult}
+ * @returns {Promise<AnalysisResult>}
  */
 async function analizeSlave(slave, config) {
   const { fromTime, deepInHours } = config;
-  const indexFolderPath = process.MOCK
-    ? path.join(slavesMockDirPath, slave.id, 'INDEX')
+  const indexFolderPath = process.env.videoData === 'mock'
+    ? path.join(slavesMockDirPath, slave.id, 'INDEX') // use mock video data
     : path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
 
   const aResult = new AnalysisResult(slave, config);
@@ -73,16 +75,16 @@ async function analizeSlave(slave, config) {
 
 /**
  * Проанализировать видеоархивы на видеосерверах
- * @param {Slave} slaves видеосерверы
+ * @param {Slave[]} slaves видеосерверы
  * @param {Config} config параметры анализа
- * @returns {[AnalysisResult]}
+ * @returns {Promise<AnalysisResult[]>}
  */
 async function analize(slaves, config) {
   const aResults = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for (const slave of slaves) {
-    process.stdout.write(`анализ в/врхива на ${slave.id} ...`);
+    process.stdout.write(`анализ в/архива на ${slave.id} ...`);
     const aResult = await analizeSlave(slave, config);
     console.log(`выполнен => ${aResult.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${aResult.continuousDepth} дня(дней)\n`);
     aResults.push(aResult);

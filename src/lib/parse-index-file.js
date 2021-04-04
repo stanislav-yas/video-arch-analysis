@@ -1,35 +1,42 @@
+// @ts-check
 const fsP = require('fs').promises;
 
-// const { ResultTable } = require('./result-table');
+/** @typedef {import('../lib/analysis-result')} AnalysisResult параметры анализа */
 
 const UNKNOWN_INDEX_FILE_FORMAT_ERROR_MESSAGE = 'unkwnown index file format';
 const INDEX_FILE_FORMAT_ERROR_MESSAGE = 'index file format error';
 
-function getStructureLength(descr) {
-  const descrMap = [
-    { descr: 0xAB00, strLen: 23 },
-    { descr: 0xAB01, strLen: 25 },
+/**
+ * Определение длины структуры с описанием видеофрагмента
+ * @private
+ * @param {number} fileDescriptor дескриптор индексного файла (зависит от версии)
+ * @returns {number} длина структуры в байтах
+ */
+function getStructureLength(fileDescriptor) {
+  const descriptorTypes = [
+    { descriptor: 0xAB00, strLen: 23 },
+    { descriptor: 0xAB01, strLen: 25 },
   ];
 
-  const mapElement = descrMap.find((element) => element.descr === descr);
-
-  if (mapElement) {
-    return mapElement.strLen;
+  const found = descriptorTypes.find((element) => element.descriptor === fileDescriptor);
+  if (found) {
+    return found.strLen;
   }
   return undefined;
 }
 
 /**
  * Video index file parsing
- * @param {path} filePath path to index file
- * @param {ResultTable} resultTable result table after index file parsing
+ * @param {string} indexFolderPath путь к папке с индексными файлами
+ * @param {AnalysisResult} aResult результат анализа видеоархива видеосервера
+ * @returns {Promise<{cnt: number, aResult: AnalysisResult}>}
  */
-async function parseIndexFile(filePath, resultTable) {
+async function parseIndexFile(indexFolderPath, aResult) {
   const buf = Buffer.alloc(30);
   let strLen;
   let fh = null;
   try {
-    fh = await fsP.open(filePath, 'r');
+    fh = await fsP.open(indexFolderPath, 'r');
 
     // file description reading
     const descriptionLength = 4; // 4 bytes
@@ -43,7 +50,7 @@ async function parseIndexFile(filePath, resultTable) {
     // console.log(strLen);
 
     // video fragment info reading
-    let cnt = 0;
+    let cnt = 0; //
     while (true) {
       ({ bytesRead, buffer } = await fh.read(buf, 0, strLen, null));
       if (bytesRead === 0) {
@@ -56,12 +63,12 @@ async function parseIndexFile(filePath, resultTable) {
       const beginTimeInSec = buffer.readUInt32LE(0);
       const endTimeInSec = buffer.readUInt32LE(4);
       const camID = buffer.readUInt16LE(21);
-      resultTable.totalFragmentsCount++;
-      resultTable.ckeckFragment(beginTimeInSec, endTimeInSec, camID);
+      aResult.totalFragmentsCount++;
+      aResult.ckeckFragment(beginTimeInSec, endTimeInSec, camID);
       cnt++;
     }
 
-    return { cnt, rt: resultTable };
+    return { cnt, aResult };
   } finally {
     if (fh) {
       await fh.close();
@@ -69,4 +76,4 @@ async function parseIndexFile(filePath, resultTable) {
   }
 }
 
-module.exports = { parseIndexFile };
+module.exports = parseIndexFile;

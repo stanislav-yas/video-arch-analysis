@@ -1,3 +1,4 @@
+// @ts-check
 const readline = require('readline');
 const { colours: cc } = require('./util');
 const { displayResultTable } = require('./display-results');

@@ -1,3 +1,5 @@
+// @ts-check
+
 process.on('uncaughtException', (err) => {
   console.error(`Произошла непредвиденная ошибка во время выполнения программы => ${err}`);
 });
@@ -6,13 +8,15 @@ const path = require('path');
 const { colours: cc, objectFromJsonFile } = require('./util');
 
 const packageJson = objectFromJsonFile(path.resolve(process.cwd(), 'package.json'));
-let config = require('../app.config');
+const appConfig = require('../app.config');
 
 if (process.argv.includes('MOCK', 2)) {
-  process.MOCK = true; // use mock data
+  process.env.videoData = 'mock'; // use mock video data
 }
 
-const curTime = process.MOCK ? new Date('2021-03-06T12:10:00') : new Date();
+const curTime = process.env.videoData === 'mock'
+  ? new Date('2021-03-06T12:10:00')
+  : new Date();
 
 // конец предыдущего часа
 const fromTime = new Date(
@@ -24,25 +28,26 @@ const fromTime = new Date(
   59,
 );
 
-config = {
+const config = {
   appTitle: packageJson.description,
   appVersion: packageJson.version,
   appFullTitle: ` ${cc.reset + cc.bright + cc.fg.magenta}${packageJson.description} (v${packageJson.version})${cc.reset}`,
+  /** @property {Date} время отсчёта анализа */
   fromTime,
-  ...config,
+  ...appConfig,
 };
 
 function run() {
   console.clear();
   process.stdout.write(`${config.appFullTitle}\n\n`);
-  const VideoArchive = require('./video-archive');
+  const VideoArchive = require('../lib/video-archive');
   const va = new VideoArchive(config);
   va.analize()
-    .then((resultTables) => {
+    .then((aResults) => {
       // objectToFile(resultTables, './misc/result.json', true);
       // console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
       const Interface = require('./interface');
-      new Interface(config, resultTables).run();
+      new Interface(config, aResults).run();
     })
     .catch((err) => {
       console.error(`Analize was failed => ${err}`);

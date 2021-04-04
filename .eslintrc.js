@@ -20,5 +20,6 @@ module.exports = {
     'no-plusplus': 'off',
     'no-constant-condition': ['error', { checkLoops: false }],
     'no-param-reassign': 'off',
+    'no-restricted-syntax': 'off',
   },
 };

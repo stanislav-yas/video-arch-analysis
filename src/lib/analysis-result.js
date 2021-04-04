@@ -1,3 +1,4 @@
+// @ts-check
 /** @typedef {import('./slave')} Slave видеосервер */
 /** @typedef {import('../app.config')} Config параметры анализа */
 
@@ -8,7 +9,7 @@ function getTimeMapIndex(fromTimeInSec, timeInSec, intervalInMinutes) {
 }
 
 /**
- * Результирующий объект анализа видеоархива
+ * Результат анализа видеоархива видеосервера
  */
 class AnalysisResult {
   /**
@@ -17,6 +18,7 @@ class AnalysisResult {
    */
   constructor(slave, config) {
     this.slave = slave;
+    /** @type {Config} */
     this.config = config;
     const { deepInHours, intervalInMinutes, fromTime } = this.config;
     this.intervalsCount = (deepInHours * 60) / intervalInMinutes;
@@ -61,4 +63,4 @@ class AnalysisResult {
   }
 }
 
-module.exports = { AnalysisResult };
+module.exports = AnalysisResult;

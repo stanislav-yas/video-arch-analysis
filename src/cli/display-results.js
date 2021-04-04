@@ -1,18 +1,28 @@
+// @ts-check
 const { colours: cc } = require('./util');
 
 const { stdout } = process;
 
-function printHoursHeader(
-  camsCount, fromTimeInSec, deepInHours, intervalInMinutes, intervalsCount, ident,
+/**
+ * Вывести заголовок таблицы
+ * @param {number} camsCount количество видеокамер
+ * @param {number} fromTimeInSec время отсчёта анализа в секундах
+ * @param {number} deepInHours глубина анализа в часах
+ * @param {number} intervalInMinutes минимальный анализируемый временной интервал в минутах
+ * @param {number} intervalsCount количество анализируемых временных интервалов
+ * @param {number} indent отступ
+ */
+function writeTableHeader(
+  camsCount, fromTimeInSec, deepInHours, intervalInMinutes, intervalsCount, indent,
 ) {
   const hourLabelLength = Math.floor(60 / intervalInMinutes);
-  let header = ` видеокамеры (${camsCount} шт.):`.padEnd(ident);
+  let header = ` видеокамеры (${camsCount} шт.):`.padEnd(indent);
   for (let index = 0; index < deepInHours; index++) {
     const curTime = new Date((fromTimeInSec + 1) * 1000 - ((deepInHours - index) * 60 * 60 * 1000));
     const curHourStr = curTime.getHours().toString().padStart(2, '0');
     header += curHourStr.padEnd(hourLabelLength);
   }
-  header = header.padStart(ident + intervalsCount);
+  header = header.padStart(indent + intervalsCount);
   const headerLine = `${''.padStart(header.length, '-')}\n`;
   stdout.write(headerLine);
   stdout.write(`${cc.reset}${cc.bright}${header}${cc.reset}\n`);
@@ -21,11 +31,11 @@ function printHoursHeader(
 
 /**
  * Графическое отображение информации о наличии видеофрагментов
- * @param {Array} flags Массив отметок о наличии видеофрагментов.
+ * @param {Array<boolean>} flags массив отметок о наличии видеофрагментов.
  * Расположены в обратном временном порядке (сначала более ранние)
  * @returns {String}
  */
-function getFragmentsInfo(flags) {
+function visualizeFlags(flags) {
   const checkedChar = '◘';
   const notCheckedChar = '∙';
   let fInfo = '';
@@ -36,12 +46,19 @@ function getFragmentsInfo(flags) {
   return fInfo;
 }
 
-function printCamInfo(timeMap, camID, camName, ident) {
+/**
+ * Вывести информацию по видеокамере
+ * @param {Array} timeMap временная карта по видеокамерам
+ * @param {string} camID id видеокамеры
+ * @param {string} camName название видеокамеры
+ * @param {number} indent отступ
+ */
+function writeCamInfo(timeMap, camID, camName, indent) {
   const gap = 1; // зазор между camTitle и fragmentsInfo
   const camIDstring = camID.padStart(3);
-  const camTitle = ` № ${camIDstring} - ${camName}`.substring(0, ident - gap).padEnd(ident - gap);
+  const camTitle = ` № ${camIDstring} - ${camName}`.substring(0, indent - gap).padEnd(indent - gap);
   const { intervalsFlags: flags, checkedFragmentsCount: cnt } = timeMap[camID];
-  const fragmentsInfo = getFragmentsInfo(flags);
+  const fragmentsInfo = visualizeFlags(flags);
   let fgColor = cc.reset;
   if (cnt === 0) {
     fgColor = cc.fg.red + cc.bright;
@@ -61,13 +78,13 @@ function displayResultTable(resultTable, ident = 40) {
   process.stdout.write(`\n${fgColor} Результат анализа индексов видеоархива на ${cc.bright}${slave.id}${fgColor} за ${deepInHours} часов${cc.reset}\n`);
   const sinceTime = new Date((fromTimeInSec + 1) * 1000 - (deepInHours * 60 * 60 * 1000));
   stdout.write(`${fgColor} с ${sinceTime.toLocaleString()} (интервал - ${intervalInMinutes} минут)\n\n${cc.reset}`);
-  printHoursHeader(
+  writeTableHeader(
     camsIDs.length, fromTimeInSec, deepInHours, intervalInMinutes, intervalsCount, ident,
   );
 
   camsIDs.forEach((camID) => {
     const camName = cams[camID];
-    printCamInfo(timeMap, camID, camName, ident);
+    writeCamInfo(timeMap, camID, camName, ident);
   });
 }
 
