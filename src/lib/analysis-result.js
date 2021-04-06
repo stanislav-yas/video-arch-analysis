@@ -18,7 +18,6 @@ class AnalysisResult {
    */
   constructor(slave, config) {
     this.slave = slave;
-    /** @type {Config} */
     this.config = config;
     const { deepInHours, intervalInMinutes, fromTime } = this.config;
     this.intervalsCount = (deepInHours * 60) / intervalInMinutes;

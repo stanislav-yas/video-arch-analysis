@@ -38,7 +38,7 @@ function countContinuousDepth(fromTime, indexFolderPath) {
 }
 
 /**
- * Проанализировать видеоархив видеосервера
+ * Проанализировать папку с видеоиндексами
  * @param {string} indexFolderPath путь к папке с видеоиндексами
  * @param {Date} fromTime время отсчёта анализа
  * @param {number} deepInHours глубина архива для анализа (в часах)
@@ -57,10 +57,10 @@ async function analizeVideoIndexFolder(indexFolderPath, fromTime, deepInHours, a
         await parseIndexFile(indexFilePath, aResult);
         // console.log(`${rt.totalCheckedFragmentsCount} fragments checked`);
       } catch (err) {
-        console.error(`Error was occurred in parseIndexFile function => ${err}`);
+        throw new Error(`Произошла ошибка при обработке файла индекса "${indexFilePath}" => ${err.message}`);
       }
     } else {
-      console.warn(`${indexFilePath} doesn't exist`);
+      console.warn(`файла индекса "${indexFilePath}" не существует`);
     }
   }
   return aResult;

@@ -29,7 +29,7 @@ function getStructureLength(fileDescriptor) {
  * Video index file parsing
  * @param {string} indexFolderPath путь к папке с индексными файлами
  * @param {AnalysisResult} aResult результат анализа видеоархива видеосервера
- * @returns {Promise<{cnt: number, aResult: AnalysisResult}>}
+ * @returns {Promise<{fragmentsCount: number, aResult: AnalysisResult}>}
  */
 async function parseIndexFile(indexFolderPath, aResult) {
   const buf = Buffer.alloc(30);
@@ -47,10 +47,9 @@ async function parseIndexFile(indexFolderPath, aResult) {
     const descr = buffer.readUInt32LE();
     strLen = getStructureLength(descr);
     if (!strLen) throw new Error(UNKNOWN_INDEX_FILE_FORMAT_ERROR_MESSAGE);
-    // console.log(strLen);
 
     // video fragment info reading
-    let cnt = 0; //
+    let fragmentsCount = 0; // число обнаруженных видеофрагментов
     while (true) {
       ({ bytesRead, buffer } = await fh.read(buf, 0, strLen, null));
       if (bytesRead === 0) {
@@ -65,10 +64,10 @@ async function parseIndexFile(indexFolderPath, aResult) {
       const camID = buffer.readUInt16LE(21);
       aResult.totalFragmentsCount++;
       aResult.ckeckFragment(beginTimeInSec, endTimeInSec, camID);
-      cnt++;
+      fragmentsCount++;
     }
 
-    return { cnt, aResult };
+    return { fragmentsCount, aResult };
   } finally {
     if (fh) {
       await fh.close();

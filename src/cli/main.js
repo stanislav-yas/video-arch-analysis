@@ -1,11 +1,12 @@
 // @ts-check
-
 process.on('uncaughtException', (err) => {
-  console.error(`Произошла непредвиденная ошибка во время выполнения программы => ${err}`);
+  console.error(`Произошла непредвиденная ошибка во время выполнения программы => ${err.stack}`);
 });
 
 const path = require('path');
 const { colours: cc, objectFromJsonFile } = require('./util');
+const VideoArchive = require('../lib/video-archive');
+const VideoArchiveMock = require('../lib/mock/video-archive-mock');
 
 const packageJson = objectFromJsonFile(path.resolve(process.cwd(), 'package.json'));
 const appConfig = require('../app.config');
@@ -40,8 +41,8 @@ const config = {
 function run() {
   console.clear();
   process.stdout.write(`${config.appFullTitle}\n\n`);
-  const VideoArchive = require('../lib/video-archive');
-  const va = new VideoArchive(config);
+  const va = process.env.videoData === 'mock'
+    ? new VideoArchiveMock(config) : new VideoArchive(config);
   va.analize()
     .then((aResults) => {
       // objectToFile(resultTables, './misc/result.json', true);
@@ -50,9 +51,11 @@ function run() {
       new Interface(config, aResults).run();
     })
     .catch((err) => {
-      console.error(`Analize was failed => ${err}`);
+      console.error(`Analize was failed => ${err.stack}`);
     })
-    .finally(() => va.closeConnection());
+    .finally(() => {
+      if (va instanceof VideoArchive) va.closeConnection();
+    });
 }
 
 run();

@@ -96,10 +96,10 @@ class VideoArchive extends VideoArchiveBase {
   }
 
   /**
- * Проанализировать видеоархив на видеосервере
- * @param {Slave} slave видеосервер
- * @returns {Promise<AnalysisResult>}
- */
+   * Проанализировать видеоархив на видеосервере
+   * @param {Slave} slave видеосервер
+   * @returns {Promise<AnalysisResult>}
+   */
   async analizeSlave(slave) {
     const { fromTime, deepInHours } = this.config;
     const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');

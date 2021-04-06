@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const VideoArchiveBase = require('../video-archive-base');
 const Slave = require('../slave');
+const AnalysisResult = require('../analysis-result');
+const analizeVideoIndexFolder = require('../analize-video-index-folder');
 
 const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 
@@ -21,9 +23,22 @@ class VideoArchiveMock extends VideoArchiveBase {
    */
   getCams(slaveID) {
     const camsJSPath = path.join(slavesMockDirPath, slaveID, 'cams.js');
-    /** @type {Cams} */
+
+    /**
+    * @typedef {Object} CameraDef Описание видекамеры
+    * @property {string} id
+    * @property {string} name
+    */
+
+    /** @type {CameraDef[]} */
     // eslint-disable-next-line import/no-dynamic-require
-    const cams = require(camsJSPath);
+    const camsDefs = require(camsJSPath);
+
+    /** @type {Cams} */
+    const cams = {};
+    camsDefs.forEach((camDef) => {
+      cams[Number.parseInt(camDef.id, 10)] = camDef.name;
+    });
     return cams;
   }
 
@@ -41,10 +56,22 @@ class VideoArchiveMock extends VideoArchiveBase {
       const slaveID = dirent.name;
       const slaveName = `Компьютер ${dirent.name}`;
       const vdrive = '';
-      const cams = await this.getCams(slaveID);
+      const cams = this.getCams(slaveID);
       slaves.push(new Slave(slaveID, slaveName, vdrive, cams));
     }
     return slaves;
+  }
+
+  /**
+ * Проанализировать видеоархив на видеосервере
+ * @param {Slave} slave видеосервер
+ * @returns {Promise<AnalysisResult>}
+ */
+  async analizeSlave(slave) {
+    const { fromTime, deepInHours } = this.config;
+    const indexFolderPath = path.join(slavesMockDirPath, slave.id, 'INDEX'); // use mock video data
+    const aResult = new AnalysisResult(slave, this.config);
+    return analizeVideoIndexFolder(indexFolderPath, fromTime, deepInHours, aResult);
   }
 }
 
