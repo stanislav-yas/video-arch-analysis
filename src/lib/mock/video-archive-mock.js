@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-// @ts-check
 const path = require('path');
 const fs = require('fs');
 const VideoArchiveBase = require('../video-archive-base');
@@ -11,24 +10,12 @@ const slavesMockDirPath = path.join(process.cwd(), 'mock-data', 'slaves');
 
 class VideoArchiveMock extends VideoArchiveBase {
   /**
-  * @typedef {Object} Cams Набор видеокамер видеосервера
-  * @property {string} [id] название камеры
-  * { camId1:'name1', camId2:'name2', ... }
-  */
-
-  /**
    * Получить набор видеокамер видеосервера
    * @param {!string} slaveID Id видеосервера
    * @returns {Cams}
    */
   getCams(slaveID) {
     const camsJSPath = path.join(slavesMockDirPath, slaveID, 'cams.js');
-
-    /**
-    * @typedef {Object} CameraDef Описание видекамеры
-    * @property {string} id
-    * @property {string} name
-    */
 
     /** @type {CameraDef[]} */
     // eslint-disable-next-line import/no-dynamic-require
@@ -63,15 +50,14 @@ class VideoArchiveMock extends VideoArchiveBase {
   }
 
   /**
- * Проанализировать видеоархив на видеосервере
- * @param {Slave} slave видеосервер
- * @returns {Promise<AnalysisResult>}
- */
+   * Проанализировать видеоархив на видеосервере
+   * @param {Slave} slave видеосервер
+   * @returns {Promise<AnalysisResult>}
+   */
   async analizeSlave(slave) {
-    const { fromTime, deepInHours } = this.config;
     const indexFolderPath = path.join(slavesMockDirPath, slave.id, 'INDEX'); // use mock video data
     const aResult = new AnalysisResult(slave, this.config);
-    return analizeVideoIndexFolder(indexFolderPath, fromTime, deepInHours, aResult);
+    return analizeVideoIndexFolder(indexFolderPath, aResult);
   }
 }
 

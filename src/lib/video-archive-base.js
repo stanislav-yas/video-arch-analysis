@@ -58,10 +58,14 @@ class VideoArchiveBase {
     const slaves = await this.getSlaves();
     // eslint-disable-next-line no-restricted-syntax
     for (const slave of slaves) {
-      process.stdout.write(`анализ в/архива на ${slave.id} ...`);
-      const aResult = await this.analizeSlave(slave);
-      console.log(`выполнен => ${aResult.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${aResult.continuousDepth} дня(дней)\n`);
-      aResults.push(aResult);
+      process.stdout.write(`анализ в/архива на ${slave.id} ... `);
+      try {
+        const aResult = await this.analizeSlave(slave);
+        console.log(`выполнен => ${aResult.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${aResult.continuousDepth} дня(дней)\n`);
+        aResults.push(aResult);
+      } catch (err) {
+        console.error(`При анализе видеоархива на ${slave.id} произошла ошибка => ${err.message}`);
+      }
     }
     return aResults;
   }

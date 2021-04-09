@@ -40,12 +40,11 @@ function countContinuousDepth(fromTime, indexFolderPath) {
 /**
  * Проанализировать папку с видеоиндексами
  * @param {string} indexFolderPath путь к папке с видеоиндексами
- * @param {Date} fromTime время отсчёта анализа
- * @param {number} deepInHours глубина архива для анализа (в часах)
  * @param {AnalysisResult} aResult результат анализа видеоархива видеосервера
  * @returns {Promise<AnalysisResult>}
  */
-async function analizeVideoIndexFolder(indexFolderPath, fromTime, deepInHours, aResult) {
+async function analizeVideoIndexFolder(indexFolderPath, aResult) {
+  const { fromTime, deepInHours } = aResult;
   aResult.continuousDepth = countContinuousDepth(fromTime, indexFolderPath);
   for (let index = 0; index < deepInHours; index++) {
     const archDate = new Date(fromTime.getTime() - (ti.hour * index));
@@ -60,7 +59,7 @@ async function analizeVideoIndexFolder(indexFolderPath, fromTime, deepInHours, a
         throw new Error(`Произошла ошибка при обработке файла индекса "${indexFilePath}" => ${err.message}`);
       }
     } else {
-      console.warn(`файла индекса "${indexFilePath}" не существует`);
+      console.warn(`индексный файл "${indexFilePath}" не существует`);
     }
   }
   return aResult;

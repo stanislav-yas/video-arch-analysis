@@ -1,4 +1,3 @@
-// @ts-check
 const path = require('path');
 const VideoArchiveBase = require('./video-archive-base');
 const Slave = require('./slave');
@@ -44,24 +43,12 @@ class VideoArchive extends VideoArchiveBase {
   }
 
   /**
-  * @typedef {Object} Cams Набор видеокамер видеосервера
-  * @property {string} [id] название камеры
-  * { camId1:'name1', camId2:'name2', ... }
-  */
-
-  /**
    * Получить набор видеокамер видеосервера
    * @param {string} slaveID Id видеосервера
    * @returns {Promise<Cams>}
    */
   async getCams(slaveID) {
     await this.checkConnection();
-
-    /**
-    * @typedef {Object} CameraDef Описание видекамеры
-    * @property {string} id
-    * @property {string} name
-    */
 
     /** @type {CameraDef[]} */
     const camsDefs = await db.connQueryAsync(this.connection, queryCams(slaveID));
@@ -73,8 +60,6 @@ class VideoArchive extends VideoArchiveBase {
     });
     return cams;
   }
-
-  /** @typedef {{id: string, name: string, vdrive: string}} SlaveDef Определение видеосервера */
 
   /**
    * Получить массив доступных видеосерверов
@@ -101,10 +86,9 @@ class VideoArchive extends VideoArchiveBase {
    * @returns {Promise<AnalysisResult>}
    */
   async analizeSlave(slave) {
-    const { fromTime, deepInHours } = this.config;
     const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
     const aResult = new AnalysisResult(slave, this.config);
-    return analizeVideoIndexFolder(indexFolderPath, fromTime, deepInHours, aResult);
+    return analizeVideoIndexFolder(indexFolderPath, aResult);
   }
 
   closeConnection() {
@@ -113,11 +97,5 @@ class VideoArchive extends VideoArchiveBase {
     }
   }
 }
-
-// if (process.env.videoData === 'mock') {
-//   const { getSlaves, getCams } = require('../cli/mock/get-mock-data');
-//   VideoArchive.prototype.getSlaves = getSlaves;
-//   VideoArchive.prototype.getCams = getCams;
-// }
 
 module.exports = VideoArchive;
