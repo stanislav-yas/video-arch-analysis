@@ -30,9 +30,9 @@ class VideoArchiveMock extends VideoArchiveBase {
   }
 
   /**
- * Получить массив доступных видеосерверов
- * @returns {Promise<Slave[]>}
- */
+   * Получить массив доступных видеосерверов
+   * @returns {Promise<Slave[]>}
+   */
   async getSlaves() {
     /** @type {Slave[]} */
     const slaves = [];
@@ -52,11 +52,12 @@ class VideoArchiveMock extends VideoArchiveBase {
   /**
    * Проанализировать видеоархив на видеосервере
    * @param {Slave} slave видеосервер
+   * @param {AnalysisParams} aParams параметры для анализа видеоархива
    * @returns {Promise<AnalysisResult>}
    */
-  async analizeSlave(slave) {
+  async analizeSlave(slave, aParams) {
     const indexFolderPath = path.join(slavesMockDirPath, slave.id, 'INDEX'); // use mock video data
-    const aResult = new AnalysisResult(slave, this.config);
+    const aResult = new AnalysisResult(slave, aParams);
     return analizeVideoIndexFolder(indexFolderPath, aResult);
   }
 }

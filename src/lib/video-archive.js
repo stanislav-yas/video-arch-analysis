@@ -2,33 +2,12 @@ const path = require('path');
 const VideoArchiveBase = require('./video-archive-base');
 const Slave = require('./slave');
 const AnalysisResult = require('./analysis-result');
-const db = require('../cli/db');
+const db = require('./db');
 const analizeVideoIndexFolder = require('./analize-video-index-folder');
-
-const querySlaves = `
-  select distinct 
-    s.id,
-    s.name,
-    substring(s.drives, 1, 1) 'vdrive'
-  from
-    OBJ_CAM c,  OBJ_SLAVE s right JOIN OBJ_GRABBER g on g.parent_id=s.id
-  where
-    c.parent_id=g.id
-    and (c.flags = 0 or c.flags is null)
-  order by 1`;
-
-const queryCams = (slaveID) => (
-  `SELECT 
-  CAST(c.id as int) 'id',
-  c.[name] 'name'
-  FROM OBJ_CAM c, OBJ_GRABBER g
-  where c.parent_id=g.id
-  and (c.flags = 0 or c.flags is null)
-  and g.parent_id = '${slaveID}'
-  order by 1`
-);
+const { querySlaves, queryCams } = require('./sql-query');
 
 class VideoArchive extends VideoArchiveBase {
+  /** @param {Config} config параметры анализа */
   constructor(config) {
     super(config);
     this.connection = null;
@@ -38,7 +17,7 @@ class VideoArchive extends VideoArchiveBase {
   /** Открыть/проверить соединение */
   async checkConnection() {
     if (this.connection === null) {
-      this.connection = await db.sqlOpenAsync(this.connectionOptions);
+      this.connection = await db.connOpenAsync(this.connectionOptions);
     }
   }
 
@@ -83,17 +62,20 @@ class VideoArchive extends VideoArchiveBase {
   /**
    * Проанализировать видеоархив на видеосервере
    * @param {Slave} slave видеосервер
+   * @param {AnalysisParams} aParams параметры для анализа видеоархива
    * @returns {Promise<AnalysisResult>}
    */
-  async analizeSlave(slave) {
+  static async analizeSlave(slave, aParams) {
     const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
-    const aResult = new AnalysisResult(slave, this.config);
+    const aResult = new AnalysisResult(slave, aParams);
     return analizeVideoIndexFolder(indexFolderPath, aResult);
   }
 
   closeConnection() {
     if (this.connection !== null) {
-      this.connection.close();
+      this.connection.close((err) => {
+        console.error(`DB closing connection error => ${err.message}`);
+      });
     }
   }
 }

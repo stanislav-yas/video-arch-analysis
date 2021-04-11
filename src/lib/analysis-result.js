@@ -10,20 +10,18 @@ function getTimeMapIndex(fromTimeInSec, timeInSec, intervalInMinutes) {
 /**
  * Результат анализа видеоархива видеосервера
  * @property {Slave} slave видеосервер
- * @property {Date} fromTime время отсчёта анализа
- * @property {number} deepInHours глубина архива для анализа (в часах)
+ * @property {AnalysisParams} aParams параметры для анализа видеоархива
+ * @property {number} intervalsCount количество анализируемых временных интервалов
  */
 class AnalysisResult {
   /**
    * @param {Slave} slave видеосервер
-   * @param {Config} config параметры анализа
+   * @param {AnalysisParams} aParams параметры для анализа видеоархива
    */
-  constructor(slave, config) {
+  constructor(slave, aParams) {
     this.slave = slave;
-    this.fromTime = config.fromTime;
-    this.deepInHours = config.deepInHours;
-    this.intervalInMinutes = config.intervalInMinutes;
-    this.intervalsCount = (this.deepInHours * 60) / this.intervalInMinutes;
+    this.aParams = aParams;
+    this.intervalsCount = (aParams.deepInHours * 60) / aParams.intervalInMinutes;
     this.totalFragmentsCount = 0;
     this.totalCheckedFragmentsCount = 0;
     this.continuousDepth = 0;
@@ -43,9 +41,10 @@ class AnalysisResult {
     // console.log (`${fromTime} : ${fromTimeInSec}`);
     // console.log (`${beginTime} : ${beginTimeInSec}`);
     // console.log (`${endTime} : ${endTimeInSec}`);
-    const fromTimeInSec = this.fromTime.getTime() / 1000;
-    const beginIndex = getTimeMapIndex(fromTimeInSec, beginTimeInSec, this.intervalInMinutes);
-    const endIndex = getTimeMapIndex(fromTimeInSec, endTimeInSec, this.intervalInMinutes);
+    const { fromTime, intervalInMinutes } = this.aParams;
+    const fromTimeInSec = fromTime.getTime() / 1000;
+    const beginIndex = getTimeMapIndex(fromTimeInSec, beginTimeInSec, intervalInMinutes);
+    const endIndex = getTimeMapIndex(fromTimeInSec, endTimeInSec, intervalInMinutes);
     const shouldCheckBeginFlag = (beginIndex >= 0 && beginIndex < this.intervalsCount);
     const shouldCheckEndFlag = (endIndex >= 0 && endIndex < this.intervalsCount);
     if (shouldCheckBeginFlag || shouldCheckEndFlag) {

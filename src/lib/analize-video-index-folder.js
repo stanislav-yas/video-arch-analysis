@@ -1,4 +1,3 @@
-// @ts-check
 /** @typedef {import('./slave')} Slave видеосервер */
 /** @typedef {import('../app.config')} Config параметры анализа */
 /** @typedef {import('./analysis-result')} AnalysisResult параметры анализа */
@@ -44,7 +43,7 @@ function countContinuousDepth(fromTime, indexFolderPath) {
  * @returns {Promise<AnalysisResult>}
  */
 async function analizeVideoIndexFolder(indexFolderPath, aResult) {
-  const { fromTime, deepInHours } = aResult;
+  const { fromTime, deepInHours } = aResult.aParams;
   aResult.continuousDepth = countContinuousDepth(fromTime, indexFolderPath);
   for (let index = 0; index < deepInHours; index++) {
     const archDate = new Date(fromTime.getTime() - (ti.hour * index));

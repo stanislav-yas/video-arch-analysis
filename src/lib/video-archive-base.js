@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable class-methods-use-this */
-// @ts-check
 
-/** @typedef {import('../app.config')} Config параметры анализа */
+/** @typedef {import('./slave')} Slave видеосервер */
 /** @typedef {import('./analysis-result')} AnalysisResult параметры анализа */
 
 /**
@@ -15,12 +14,6 @@ class VideoArchiveBase {
   }
 
   /**
-  * @typedef {Object} Cams Набор видеокамер видеосервера
-  * @property {string} [id] название камеры
-  * { camId1:'name1', camId2:'name2', ... }
-  */
-
-  /**
    * Получить набор видеокамер видеосервера
    * @param {!string} slaveID Id видеосервера
    * @returns {Promise<Cams> | Cams}
@@ -28,8 +21,6 @@ class VideoArchiveBase {
   getCams(slaveID) {
     throw new Error('Method "getCams" did not implemented');
   }
-
-  /** @typedef {import('./slave')} Slave видеосервер */
 
   /**
    * Получить массив доступных видеосерверов
@@ -42,17 +33,34 @@ class VideoArchiveBase {
   /**
    * Проанализировать видеоархив на видеосервере
    * @param {Slave} slave видеосервер
+   * @param {AnalysisParams} aParams параметры для анализа видеоархива
    * @returns {Promise<AnalysisResult>}
    */
-  async analizeSlave(slave) {
+  async analizeSlave(slave, aParams) {
     throw new Error('Method "analizeSlave" did not implemented');
   }
 
   /**
    * Проанализировать видеоархивы на видеосерверах
+   * @param {Date} [fromTime] время отсчёта анализа
    * @returns {Promise<AnalysisResult[]>}
    */
-  async analize() {
+  async analize(fromTime = new Date()) {
+    // установить время отсчёта анализа на конец предыдущего часа заданного времени
+    fromTime = new Date(
+      fromTime.getFullYear(),
+      fromTime.getMonth(),
+      fromTime.getDate(),
+      fromTime.getHours() - 1,
+      59,
+      59,
+    );
+    /** @type {AnalysisParams} */
+    const aParams = {
+      fromTime,
+      deepInHours: this.config.deepInHours,
+      intervalInMinutes: this.config.intervalInMinutes,
+    };
     /** @type {AnalysisResult[]} */
     const aResults = [];
     const slaves = await this.getSlaves();
@@ -60,7 +68,7 @@ class VideoArchiveBase {
     for (const slave of slaves) {
       process.stdout.write(`анализ в/архива на ${slave.id} ... `);
       try {
-        const aResult = await this.analizeSlave(slave);
+        const aResult = await this.analizeSlave(slave, aParams);
         console.log(`выполнен => ${aResult.totalCheckedFragmentsCount} видеофрагментов обнаружено / непр.глубина ${aResult.continuousDepth} дня(дней)\n`);
         aResults.push(aResult);
       } catch (err) {

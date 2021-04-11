@@ -1,7 +1,7 @@
-// @ts-check
 const { colours: cc } = require('./util');
 
 const { stdout } = process;
+/** @typedef {import('../lib/analysis-result')} AnalysisResult */
 
 /**
  * Вывести заголовок таблицы
@@ -48,7 +48,7 @@ function visualizeFlags(flags) {
 
 /**
  * Вывести информацию по видеокамере
- * @param {Array} timeMap временная карта по видеокамерам
+ * @param {Object} timeMap временная карта по видеокамерам
  * @param {string} camID id видеокамеры
  * @param {string} camName название видеокамеры
  * @param {number} indent отступ
@@ -68,9 +68,14 @@ function writeCamInfo(timeMap, camID, camName, indent) {
   stdout.write(`${fgColor}${camTitle} ${fragmentsInfo} ( ${cnt} фр.)\n`);
 }
 
-function displayResultTable(resultTable, ident = 40) {
-  const { slave, intervalsCount, config, fromTimeInSec, timeMap } = resultTable;
-  const { deepInHours, intervalInMinutes } = config;
+/**
+ * Отобразить результат анализа видеоархива
+ * @param {AnalysisResult} aResult
+ */
+function displayResult(aResult, ident = 40) {
+  const { slave, timeMap, intervalsCount } = aResult;
+  const { deepInHours, intervalInMinutes, fromTime } = aResult.aParams;
+  const fromTimeInSec = fromTime.getTime() / 1000;
   const { cams } = slave;
   const camsIDs = Object.keys(cams);
 
@@ -88,10 +93,14 @@ function displayResultTable(resultTable, ident = 40) {
   });
 }
 
-function displayResults(resultTables) {
+/**
+ * Отобразить результаты анализа видеоархива
+ * @param {AnalysisResult[]} aResults
+ */
+function displayResults(aResults) {
   const ident = 40;
-  resultTables.forEach((resultTable) => {
-    displayResultTable(resultTable, ident);
+  aResults.forEach((resultTable) => {
+    displayResult(resultTable, ident);
   });
 }
 
@@ -100,4 +109,4 @@ function displayResults(resultTables) {
 //   displayResults(resultTables);
 // })();
 
-module.exports = { displayResults, displayResultTable };
+module.exports = { displayResults, displayResultTable: displayResult };
