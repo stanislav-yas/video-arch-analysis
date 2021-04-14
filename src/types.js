@@ -42,3 +42,8 @@
  * @prop {number} deepInHours глубина архива для анализа (в часах)
  * @prop {number} intervalInMinutes мин. временной интервал для анализа (в минутах)
  */
+
+/**
+ * Карта отмеченных видеофрагментов с разбивкой по видеокамерам
+ * @typedef {{camId?: {intervalsFlags: Array<1 | null>, checkedFragmentsCount: number}}} TimeMap
+ */

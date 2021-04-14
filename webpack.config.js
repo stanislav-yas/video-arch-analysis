@@ -24,7 +24,7 @@ module.exports = {
   externals: [
     {
       '../app.config': 'commonjs ../app.config',
-      msnodesqlv8: 'commonjs msnodesqlv8',
+      'msnodesqlv8/lib/sql': 'commonjs msnodesqlv8/lib/sql',
     },
     // nodeExternals()
   ],

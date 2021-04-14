@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 const path = require('path');
 const VideoArchiveBase = require('./video-archive-base');
 const Slave = require('./slave');
@@ -65,7 +66,7 @@ class VideoArchive extends VideoArchiveBase {
    * @param {AnalysisParams} aParams параметры для анализа видеоархива
    * @returns {Promise<AnalysisResult>}
    */
-  static async analizeSlave(slave, aParams) {
+  async analizeSlave(slave, aParams) {
     const indexFolderPath = path.join(`\\\\${slave.id}`, slave.vdrive, 'VIDEO', 'INDEX');
     const aResult = new AnalysisResult(slave, aParams);
     return analizeVideoIndexFolder(indexFolderPath, aResult);
@@ -74,7 +75,7 @@ class VideoArchive extends VideoArchiveBase {
   closeConnection() {
     if (this.connection !== null) {
       this.connection.close((err) => {
-        console.error(`DB closing connection error => ${err.message}`);
+        if (err) console.error(`DB closing connection error => ${err.message}`);
       });
     }
   }

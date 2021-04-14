@@ -1,4 +1,4 @@
-const { colours: cc } = require('./util');
+const { colours: cc } = require('../lib/util');
 
 const { stdout } = process;
 /** @typedef {import('../lib/analysis-result')} AnalysisResult */

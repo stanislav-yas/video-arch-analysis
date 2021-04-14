@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const parseIndexFile = require('./parse-index-file');
-const { dateStrings, timeInts: ti } = require('../cli/util');
+const { dateStrings, timeInts: ti } = require('./util');
 
 /**
  * Вычисление непрерывной глубины видеоархива по индексным файлам

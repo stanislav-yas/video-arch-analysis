@@ -1,10 +1,4 @@
 /**
-* @typedef {Object} Cams Набор видеокамер видеосервера
-* @property {string} [id] название камеры
-* { camId1:'name1', camId2:'name2', ... }
-*/
-
-/**
  * Видеосервер
  * @property {string} id Id видеосервера
  * @property {string} name название видеосервера

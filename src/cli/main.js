@@ -3,7 +3,7 @@ process.on('uncaughtException', (err) => {
 });
 
 const path = require('path');
-const { colours: cc, objectFromJsonFile } = require('./util');
+const { colours: cc, objectFromJsonFile } = require('../lib/util');
 const VideoArchive = require('../lib/video-archive');
 const VideoArchiveMock = require('../lib/mock/video-archive-mock');
 
@@ -34,10 +34,10 @@ if (process.argv.includes('MOCK', 2)) {
 
 console.clear();
 process.stdout.write(`${config.appFullTitle}\n\n`);
-//TODO to refactor to await
+
 va.analize(fromTime)
   .then((aResults) => {
-    // objectToFile(resultTables, './misc/result.json', true);
+    // require('./util').objectToFile(aResults[0], '../misc/result.json', true);
     // console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
     const Interface = require('./interface');
     new Interface(config, aResults).run();

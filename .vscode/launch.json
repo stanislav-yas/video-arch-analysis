@@ -7,6 +7,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Launch main.js",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\src\\cli\\main.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Launch main.js MOCK",
       "skipFiles": [
         "<node_internals>/**"

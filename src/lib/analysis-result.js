@@ -9,9 +9,13 @@ function getTimeMapIndex(fromTimeInSec, timeInSec, intervalInMinutes) {
 
 /**
  * Результат анализа видеоархива видеосервера
- * @property {Slave} slave видеосервер
- * @property {AnalysisParams} aParams параметры для анализа видеоархива
- * @property {number} intervalsCount количество анализируемых временных интервалов
+ * @prop {Slave} slave видеосервер
+ * @prop {AnalysisParams} aParams параметры для анализа видеоархива
+ * @prop {number} intervalsCount количество анализируемых временных интервалов
+ * @prop {number} totalFragmentsCount всего найденных видеофрагментов
+ * @prop {number} totalCheckedFragmentsCount всего отмеченных видеофрагментов
+ * @prop {number} continuousDepth непрерывная глубина видеоархива
+ * @prop {TimeMap} timeMap карта отмеченных видеофрагментов с разбивкой по видеокамерам
  */
 class AnalysisResult {
   /**
@@ -25,6 +29,7 @@ class AnalysisResult {
     this.totalFragmentsCount = 0;
     this.totalCheckedFragmentsCount = 0;
     this.continuousDepth = 0;
+    /** @type {TimeMap} */
     this.timeMap = {};
     const camsIDs = Object.keys(slave.cams);
     camsIDs.forEach((element) => {
@@ -36,11 +41,6 @@ class AnalysisResult {
   }
 
   ckeckFragment(beginTimeInSec, endTimeInSec, camID) {
-    // const beginTime = new Date(beginTimeInSec * 1000);
-    // const endTime = new Date(endTimeInSec * 1000);
-    // console.log (`${fromTime} : ${fromTimeInSec}`);
-    // console.log (`${beginTime} : ${beginTimeInSec}`);
-    // console.log (`${endTime} : ${endTimeInSec}`);
     const { fromTime, intervalInMinutes } = this.aParams;
     const fromTimeInSec = fromTime.getTime() / 1000;
     const beginIndex = getTimeMapIndex(fromTimeInSec, beginTimeInSec, intervalInMinutes);
