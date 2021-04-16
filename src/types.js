@@ -33,11 +33,13 @@
  * @prop {number} intervalInMinutes мин. временной интервал для анализа (в минутах)
  * @prop {number} warningDepth предупреждение, если непр.глубина меньше данного значения (в днях)
  * @prop {number} alarmDepth тревога, если непр.глубина меньше данного значения (в днях)
+ * @prop {number} maxErrorsForServer макс. количество ошибок для прекращения анализа видеосервера
  * @prop {DBConfig} db
  */
 
 /**
  * @typedef {Object} AnalysisParams Параметры для анализа видеоархива
+ * @prop {number} maxErrorsForServer макс. количество ошибок для прекращения анализа видеосервера
  * @prop {Date} fromTime время отсчёта анализа
  * @prop {number} deepInHours глубина архива для анализа (в часах)
  * @prop {number} intervalInMinutes мин. временной интервал для анализа (в минутах)

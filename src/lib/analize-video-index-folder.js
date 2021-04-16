@@ -53,9 +53,11 @@ async function analizeVideoIndexFolder(indexFolderPath, aResult) {
     if (fs.existsSync(indexFilePath)) {
       try {
         await parseIndexFile(indexFilePath, aResult);
-        // console.log(`${rt.totalCheckedFragmentsCount} fragments checked`);
       } catch (err) {
-        throw new Error(`Произошла ошибка при обработке файла индекса "${indexFilePath}" => ${err.message}`);
+        if (!aResult.addError(new Error(`Ошибка при обработке файла индекса "${indexFilePath}" => ${err.message}`))) {
+          // прервать анализ из-за превышения допустимого кол-ва ошибок
+          break;
+        }
       }
     } else {
       console.warn(`индексный файл "${indexFilePath}" не существует`);

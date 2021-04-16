@@ -48,9 +48,9 @@ async function parseIndexFile(indexFolderPath, aResult) {
     strLen = getStructureLength(descr);
     if (!strLen) throw new Error(UNKNOWN_INDEX_FILE_FORMAT_ERROR_MESSAGE);
 
-    // video fragment info reading
     let fragmentsCount = 0; // число обнаруженных видеофрагментов
     while (true) {
+      // чтение очередного видеофрагмента
       ({ bytesRead, buffer } = await fh.read(buf, 0, strLen, null));
       if (bytesRead === 0) {
         // EOF reached
@@ -62,7 +62,6 @@ async function parseIndexFile(indexFolderPath, aResult) {
       const beginTimeInSec = buffer.readUInt32LE(0);
       const endTimeInSec = buffer.readUInt32LE(4);
       const camID = buffer.readUInt16LE(21);
-      aResult.totalFragmentsCount++;
       aResult.ckeckFragment(beginTimeInSec, endTimeInSec, camID);
       fragmentsCount++;
     }

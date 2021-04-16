@@ -60,6 +60,7 @@ class VideoArchiveBase {
       fromTime,
       deepInHours: this.config.deepInHours,
       intervalInMinutes: this.config.intervalInMinutes,
+      maxErrorsForServer: this.config.maxErrorsForServer,
     };
     /** @type {AnalysisResult[]} */
     const aResults = [];

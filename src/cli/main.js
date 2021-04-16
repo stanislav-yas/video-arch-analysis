@@ -38,7 +38,6 @@ process.stdout.write(`${config.appFullTitle}\n\n`);
 va.analize(fromTime)
   .then((aResults) => {
     // require('./util').objectToFile(aResults[0], '../misc/result.json', true);
-    // console.log(`Video archive analize started at ${curTime.toLocaleString()} is done`);
     const Interface = require('./interface');
     new Interface(config, aResults).run();
   })
