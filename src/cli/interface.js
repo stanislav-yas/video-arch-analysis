@@ -1,16 +1,26 @@
 // @ts-check
+/** @typedef {import('../app.config')} Config параметры анализа */
+/** @typedef {import('../lib/analysis-result')} AnalysisResult результат анализа */
+
 const readline = require('readline');
 const { colours: cc } = require('../lib/util');
-const { displayResultTable } = require('./display-results');
+const { displayResult } = require('./display-results');
 
 const { stdout } = process;
+const alarmColor = cc.fg.red + cc.bright;
+const warnColor = cc.fg.yellow + cc.bright;
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
 class Interface {
-  constructor(config, resultTables) {
+  /**
+   * Интерфейс программы
+   * @param {Config} config
+   * @param {AnalysisResult[]} aResults
+   */
+  constructor(config, aResults) {
     this.config = config;
-    this.resultTables = resultTables;
+    this.aResults = aResults;
     this.itemIndex = 0;
     this._onKeyPressed = this._onKeyPressed.bind(this);
   }
@@ -21,7 +31,7 @@ class Interface {
       case 'space':
       case 'return':
         this.itemIndex++;
-        if (this.itemIndex === this.resultTables.length) {
+        if (this.itemIndex === this.aResults.length) {
           this.itemIndex = 0;
         }
         this.draw();
@@ -29,7 +39,7 @@ class Interface {
       case 'up':
         this.itemIndex--;
         if (this.itemIndex < 0) {
-          this.itemIndex = this.resultTables.length - 1;
+          this.itemIndex = this.aResults.length - 1;
         }
         this.draw();
         break;
@@ -47,25 +57,27 @@ class Interface {
   }
 
   showResult() {
-    displayResultTable(this.resultTables[this.itemIndex], 40);
+    displayResult(this.aResults[this.itemIndex], 40);
   }
 
   showMenu() {
     stdout.write(`\n${cc.reset} Выбирите доступный компьютер с видеоархивом (${cc.fg.yellow}↑ ↓ Space Enter , Esc - выход${cc.reset}):\n\n компьютер  [непрер. глубина в/архива в днях]\n\n`);
 
     let maxSlaveIdLength = 0;
-    this.resultTables.forEach((rt) => {
-      if (rt.slave.id.length > maxSlaveIdLength) maxSlaveIdLength = rt.slave.id.length;
+    // вычисление максимальной длины id видеосерверов
+    this.aResults.forEach((aResult) => {
+      if (aResult.slave.id.length > maxSlaveIdLength) maxSlaveIdLength = aResult.slave.id.length;
     });
-    for (let index = 0; index < this.resultTables.length; index++) {
-      const { slave, continuousDepth } = this.resultTables[index];
+    for (let index = 0; index < this.aResults.length; index++) {
+      const { slave, continuousDepth, alarmedCams } = this.aResults[index];
       let menuStr = slave.id;
       menuStr = menuStr.padEnd(maxSlaveIdLength + 1);
       let fgColor = cc.reset;
       if (continuousDepth < this.config.alarmDepth) {
-        fgColor += cc.fg.red + cc.bright;
-      } else if (continuousDepth < this.config.warningDepth) {
-        fgColor += cc.fg.yellow + cc.bright;
+        fgColor += alarmColor;
+      } else if (continuousDepth < this.config.warningDepth
+       || alarmedCams.length !== 0) {
+        fgColor += warnColor;
       }
       if (index === this.itemIndex) {
         fgColor += cc.reverse;

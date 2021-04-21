@@ -16,6 +16,7 @@ function getTimeMapIndex(fromTimeInSec, timeInSec, intervalInMinutes) {
  * @prop {number} totalCheckedFragmentsCount всего отмеченных видеофрагментов
  * @prop {number} continuousDepth непрерывная глубина видеоархива
  * @prop {TimeMap} timeMap карта отмеченных видеофрагментов с разбивкой по видеокамерам
+ * @prop {string[]} alarmedCams массив идентификаторов видеокамер с отсутствующими видеофрагментами
  * @prop {Error[]} errors массив ошибок анализа видеоархива
  */
 class AnalysisResult {
@@ -39,6 +40,8 @@ class AnalysisResult {
         checkedFragmentsCount: 0,
       };
     });
+    /** @type {string[]} */
+    this.alarmedCams = [];
     /** @type {Error[]} */
     this.errors = [];
   }

@@ -63,6 +63,12 @@ async function analizeVideoIndexFolder(indexFolderPath, aResult) {
       console.warn(`индексный файл "${indexFilePath}" не существует`);
     }
   }
+  // формирование массива идентификаторов видеокамер с отсутствующими видеофрагментами
+  Object.keys(aResult.timeMap).forEach((camID) => {
+    if (aResult.timeMap[camID].checkedFragmentsCount === 0) {
+      aResult.alarmedCams.push(camID);
+    }
+  });
   return aResult;
 }
 

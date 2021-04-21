@@ -1,10 +1,12 @@
 const { colours: cc } = require('../lib/util');
 
+const alarmColor = cc.fg.red + cc.bright;
+const warnColor = cc.fg.yellow + cc.bright;
 const { stdout } = process;
-/** @typedef {import('../lib/analysis-result')} AnalysisResult */
 
 /**
  * Вывести заголовок таблицы
+ * @private
  * @param {number} camsCount количество видеокамер
  * @param {number} fromTimeInSec время отсчёта анализа в секундах
  * @param {number} deepInHours глубина анализа в часах
@@ -31,6 +33,7 @@ function writeTableHeader(
 
 /**
  * Графическое отображение информации о наличии видеофрагментов
+ * @private
  * @param {Array<boolean>} flags массив отметок о наличии видеофрагментов.
  * Расположены в обратном временном порядке (сначала более ранние)
  * @returns {String}
@@ -48,7 +51,8 @@ function visualizeFlags(flags) {
 
 /**
  * Вывести информацию по видеокамере
- * @param {Object} timeMap временная карта по видеокамерам
+ * @private
+ * @param {TimeMap} timeMap временная карта по видеокамерам
  * @param {string} camID id видеокамеры
  * @param {string} camName название видеокамеры
  * @param {number} indent отступ
@@ -61,15 +65,18 @@ function writeCamInfo(timeMap, camID, camName, indent) {
   const fragmentsInfo = visualizeFlags(flags);
   let fgColor = cc.reset;
   if (cnt === 0) {
-    fgColor = cc.fg.red + cc.bright;
-  } else if (cnt <= 2) {
-    fgColor = cc.fg.yellow + cc.bright;
+    fgColor = alarmColor;
+  } else if (cnt <= 2) { //TODO добавить настройку warningFragmentsCount в app.config.js
+    fgColor = warnColor;
   }
   stdout.write(`${fgColor}${camTitle} ${fragmentsInfo} ( ${cnt} фр.)\n`);
 }
 
+/** @typedef {import('../lib/analysis-result')} AnalysisResult */
+
 /**
  * Отобразить результат анализа видеоархива
+ * @public
  * @param {AnalysisResult} aResult
  */
 function displayResult(aResult, ident = 40) {
@@ -93,20 +100,4 @@ function displayResult(aResult, ident = 40) {
   });
 }
 
-/**
- * Отобразить результаты анализа видеоархива
- * @param {AnalysisResult[]} aResults
- */
-function displayResults(aResults) {
-  const ident = 40;
-  aResults.forEach((resultTable) => {
-    displayResult(resultTable, ident);
-  });
-}
-
-// (function test(){
-//   const resultTables = require('./util').objectFromJsonFile('./misc/result.json', 'utf8');
-//   displayResults(resultTables);
-// })();
-
-module.exports = { displayResults, displayResultTable: displayResult };
+module.exports = { displayResult };
