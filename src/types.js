@@ -33,7 +33,12 @@
  * @prop {number} intervalInMinutes мин. временной интервал для анализа (в минутах)
  * @prop {number} warningDepth предупреждение, если непр.глубина меньше данного значения (в днях)
  * @prop {number} alarmDepth тревога, если непр.глубина меньше данного значения (в днях)
+ * @prop {number} warningFragmentsCount предупреждение, если количество видеофрагментов <= значения
+ * @prop {number} indent отступ слева для названия видеокамеры при выводе результата анализа
  * @prop {number} maxErrorsForServer макс. количество ошибок для прекращения анализа видеосервера
+ * @prop {string} [appTitle] packageJson.description
+ * @prop {string} [appFullTitle]
+ * @prop {string} [appVersion] packageJson.version
  * @prop {DBConfig} db
  */
 

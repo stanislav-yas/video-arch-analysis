@@ -12,7 +12,7 @@ const warnColor = cc.fg.yellow + cc.bright;
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
-class Interface {
+class View {
   /**
    * Интерфейс программы
    * @param {Config} config
@@ -57,7 +57,8 @@ class Interface {
   }
 
   showResult() {
-    displayResult(this.aResults[this.itemIndex], 40);
+    displayResult(this.aResults[this.itemIndex], this.config.indent,
+      this.config.warningFragmentsCount);
   }
 
   showMenu() {
@@ -92,7 +93,7 @@ class Interface {
   }
 }
 
-module.exports = Interface;
+module.exports = View;
 
 // (function run() {
 //   const config = require('./config');

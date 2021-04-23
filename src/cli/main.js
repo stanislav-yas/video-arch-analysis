@@ -38,8 +38,8 @@ process.stdout.write(`${config.appFullTitle}\n\n`);
 va.analize(fromTime)
   .then((aResults) => {
     // require('./util').objectToFile(aResults[0], '../misc/result.json', true);
-    const Interface = require('./interface');
-    new Interface(config, aResults).run();
+    const View = require('./view');
+    new View(config, aResults).run();
   })
   .catch((err) => {
     console.error(`Analize was failed => ${err.stack}`);

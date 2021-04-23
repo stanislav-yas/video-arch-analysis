@@ -57,7 +57,7 @@ function visualizeFlags(flags) {
  * @param {string} camName название видеокамеры
  * @param {number} indent отступ
  */
-function writeCamInfo(timeMap, camID, camName, indent) {
+function writeCamInfo(timeMap, camID, camName, indent, warningFragmentsCount) {
   const gap = 1; // зазор между camTitle и fragmentsInfo
   const camIDstring = camID.padStart(3);
   const camTitle = ` № ${camIDstring} - ${camName}`.substring(0, indent - gap).padEnd(indent - gap);
@@ -66,7 +66,7 @@ function writeCamInfo(timeMap, camID, camName, indent) {
   let fgColor = cc.reset;
   if (cnt === 0) {
     fgColor = alarmColor;
-  } else if (cnt <= 2) { //TODO добавить настройку warningFragmentsCount в app.config.js
+  } else if (cnt <= warningFragmentsCount) {
     fgColor = warnColor;
   }
   stdout.write(`${fgColor}${camTitle} ${fragmentsInfo} ( ${cnt} фр.)\n`);
@@ -79,7 +79,7 @@ function writeCamInfo(timeMap, camID, camName, indent) {
  * @public
  * @param {AnalysisResult} aResult
  */
-function displayResult(aResult, ident = 40) {
+function displayResult(aResult, ident = 40, warningFragmentsCount = 2) {
   const { slave, timeMap, intervalsCount } = aResult;
   const { deepInHours, intervalInMinutes, fromTime } = aResult.aParams;
   const fromTimeInSec = fromTime.getTime() / 1000;
@@ -96,7 +96,7 @@ function displayResult(aResult, ident = 40) {
 
   camsIDs.forEach((camID) => {
     const camName = cams[camID];
-    writeCamInfo(timeMap, camID, camName, ident);
+    writeCamInfo(timeMap, camID, camName, ident, warningFragmentsCount);
   });
 }
 
